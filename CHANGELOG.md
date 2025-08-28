@@ -2,9 +2,31 @@
 
 ## Última actualización: 28 de agosto de 2025
 
+### 🎉 VERSIONES
+
+#### Versión 1.2.0 (28 de agosto de 2025) - Git Manager Pro
+- 🚀 **NUEVO**: Git Manager Pro - Sistema de guardado automático
+- ✨ **Agregado**: Scripts para commit y push automático a GitHub
+- 📦 **Agregado**: Sistema de backup automático local + nube
+- 🔧 **Agregado**: Configurador automático de GitHub
+- 🎯 **Agregado**: Menú interactivo para gestión de Git
+- 📚 **Agregado**: Documentación completa de uso (GUIA_GIT_MANAGER.md)
+
+**Scripts incluidos:**
+- `GIT_MANAGER_PRO.bat` - Menú principal interactivo
+- `COMMIT_RAPIDO.bat` - Guardado automático con un clic
+- `AUTO_COMMIT_PUSH.bat` - Commit personalizado + push
+- `BACKUP_Y_SYNC.bat` - Backup local + sincronización
+- `CONFIGURAR_GITHUB.bat` - Configuración inicial
+
+#### Versión 1.1.1 (28 de agosto de 2025) - Fix Tipo Préstamo
+- 🐛 **Corregido**: Tipo de préstamo en tabla (mostraba "A Cuota" para "Solo Interés")
+- ✅ **Mejorado**: Condición para detectar tipo de préstamo correctamente
+- 🔍 **Solución**: Verificar campo `prestamo.tipo === 'interes'` en lugar de `prestamo.tipo_prestamo`
+
 ### ✅ PROBLEMAS SOLUCIONADOS
 
-#### Error "Error desconocido" al crear préstamos
+#### Versión 1.1.0 - Error "Error desconocido" al crear préstamos
 - **Problema**: El sistema mostraba "Error desconocido" al intentar crear préstamos, incluso cuando la operación era exitosa en el backend.
 - **Causa**: Conflicto entre dos versiones de la función `mostrarResultadoEnModal()` - una que recibía un objeto y otra que recibía dos strings.
 - **Solución**: Función híbrida que maneja ambos formatos automáticamente.
