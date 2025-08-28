@@ -1177,9 +1177,6 @@
             try {
                 console.log(`Llamando al backend: ${modulo}/${accion}`, datos);
                 
-                // Mostrar modal de loading
-                abrirModal();
-                
                 const actionName = `${modulo}_${accion}`;
                 const response = await fetch(`api_simple.php?action=${actionName}`, {
                     method: 'POST',
@@ -1190,19 +1187,13 @@
                 });
                 
                 const resultado = await response.json();
-                
-                // Mostrar resultado en modal
-                mostrarResultadoEnModal(resultado);
+                console.log(`Resultado de ${modulo}/${accion}:`, resultado);
                 
                 return resultado;
                 
             } catch (error) {
                 console.error('Error en llamada al backend:', error);
-                mostrarResultadoEnModal({
-                    success: false,
-                    error: 'Error de conexión: ' + error.message
-                });
-                return { success: false, error: error.message };
+                return { success: false, error: 'Error de conexión: ' + error.message };
             }
         }
         
@@ -1219,33 +1210,67 @@
             document.getElementById('modalRespuesta').style.display = 'none';
         }
         
-        function mostrarResultadoEnModal(resultado) {
+        function mostrarResultadoEnModal(titulo, mensaje) {
             const contenido = document.getElementById('contenidoModal');
             
-            if (resultado.success) {
-                contenido.innerHTML = `
-                    <div style="color: #4caf50; text-align: center; margin-bottom: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
-                        <h3 style="margin: 0; color: #2e7d32;">¡Operación Exitosa!</h3>
-                    </div>
-                    <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border: 1px solid #4caf50;">
-                        <p style="margin: 0; font-size: 16px; text-align: center; color: #2e7d32;">
-                            ${resultado.mensaje || resultado.message || 'La operación se completó correctamente'}
-                        </p>
-                    </div>
-                `;
+            // Si se pasa un solo parámetro que es un objeto (formato anterior)
+            if (typeof titulo === 'object' && titulo !== null && mensaje === undefined) {
+                const resultado = titulo;
+                
+                if (resultado.success) {
+                    contenido.innerHTML = `
+                        <div style="color: #4caf50; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                            <h3 style="margin: 0; color: #2e7d32;">¡Operación Exitosa!</h3>
+                        </div>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border: 1px solid #4caf50;">
+                            <p style="margin: 0; font-size: 16px; text-align: center; color: #2e7d32;">
+                                ${resultado.mensaje || resultado.message || 'La operación se completó correctamente'}
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    contenido.innerHTML = `
+                        <div style="color: #f44336; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
+                            <h3 style="margin: 0; color: #c62828;">Error en la Operación</h3>
+                        </div>
+                        <div style="background: #ffebee; padding: 20px; border-radius: 8px; border: 1px solid #f44336;">
+                            <p style="margin: 0; font-size: 16px; text-align: center; color: #c62828;">
+                                ${resultado.error || resultado.message || 'Error desconocido'}
+                            </p>
+                        </div>
+                    `;
+                }
             } else {
-                contenido.innerHTML = `
-                    <div style="color: #f44336; text-align: center; margin-bottom: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
-                        <h3 style="margin: 0; color: #c62828;">Error en la Operación</h3>
-                    </div>
-                    <div style="background: #ffebee; padding: 20px; border-radius: 8px; border: 1px solid #f44336;">
-                        <p style="margin: 0; font-size: 16px; text-align: center; color: #c62828;">
-                            ${resultado.error || resultado.message || 'Error desconocido'}
-                        </p>
-                    </div>
-                `;
+                // Nuevo formato con título y mensaje separados
+                const esExito = titulo && titulo.includes('✅');
+                
+                if (esExito) {
+                    contenido.innerHTML = `
+                        <div style="color: #4caf50; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                            <h3 style="margin: 0; color: #2e7d32;">${titulo}</h3>
+                        </div>
+                        <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; border: 1px solid #4caf50;">
+                            <p style="margin: 0; font-size: 16px; text-align: center; color: #2e7d32;">
+                                ${mensaje}
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    contenido.innerHTML = `
+                        <div style="color: #f44336; text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 48px; margin-bottom: 10px;">❌</div>
+                            <h3 style="margin: 0; color: #c62828;">${titulo}</h3>
+                        </div>
+                        <div style="background: #ffebee; padding: 20px; border-radius: 8px; border: 1px solid #f44336;">
+                            <p style="margin: 0; font-size: 16px; text-align: center; color: #c62828;">
+                                ${mensaje}
+                            </p>
+                        </div>
+                    `;
+                }
             }
         }
         
@@ -1524,6 +1549,9 @@
             
             console.log('📋 Datos del préstamo a enviar:', prestamoData);
             
+            // Mostrar modal de loading
+            abrirModal();
+            
             let resultado;
             
             if (isEditMode && idField) {
@@ -1536,7 +1564,7 @@
                     cancelarEdicionPrestamo();
                     cargarPrestamos();
                 } else {
-                    mostrarResultadoEnModal('❌ Error', 'Error al actualizar préstamo: ' + resultado.error);
+                    mostrarResultadoEnModal('❌ Error', 'Error al actualizar préstamo: ' + (resultado.error || resultado.message || 'Error desconocido'));
                 }
             } else {
                 // Modo creación
@@ -1547,7 +1575,7 @@
                     document.getElementById('form-prestamo').reset();
                     cargarPrestamos();
                 } else {
-                    mostrarResultadoEnModal('❌ Error', 'Error al crear préstamo: ' + resultado.error);
+                    mostrarResultadoEnModal('❌ Error', 'Error al crear préstamo: ' + (resultado.error || resultado.message || 'Error desconocido'));
                 }
             }
         });
