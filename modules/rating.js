@@ -256,3 +256,10 @@ function getRating() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('⭐ Módulo Rating inicializado');
 });
+
+// Exportar funciones al ámbito global
+window.setRating = setRating;
+window.getRating = getRating;
+window.mostrarRatingModal = mostrarRatingModal;
+window.aplicarRating = aplicarRating;
+window.cerrarRatingModal = cerrarRatingModal;

@@ -282,3 +282,8 @@ function formatearFecha(fecha) {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('💼 Módulo Préstamos inicializado');
 });
+
+// Exportar funciones al ámbito global
+window.cargarPrestamos = cargarPrestamos;
+window.mostrarFormularioPrestamo = mostrarFormularioPrestamo;
+window.guardarPrestamo = guardarPrestamo;

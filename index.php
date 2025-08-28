@@ -156,7 +156,7 @@
     <!-- CARGAR ESTILOS MODULARES -->
     <link rel="stylesheet" href="modules/cliente.css">
     <link rel="stylesheet" href="modules/rating.css">
-    <link rel="stylesheet" href="modules/formulario-cliente.css">
+    <link rel="stylesheet" href="css/formulario-cliente.css">
     <link rel="stylesheet" href="modules/prestamos.css">
 </head>
 <body>
@@ -300,6 +300,9 @@
     <script src="modules/formulario-cliente.js"></script>
     <script src="modules/prestamos.js"></script>
     
+    <!-- INICIALIZACIÓN DEL SISTEMA -->
+    <script src="modules/inicializacion.js"></script>
+    
     <!-- SCRIPT BASE -->
     <script>
         // Estado del sistema
@@ -307,7 +310,7 @@
         
         // Verificar carga de módulos
         window.addEventListener('load', function() {
-            console.log('✅ Todos los módulos cargados');
+            console.log('✅ Todos los recursos cargados');
             
             // Verificar funciones principales
             const funcionesRequeridas = ['showTab', 'cargarClientes', 'mostrarRatingModal'];

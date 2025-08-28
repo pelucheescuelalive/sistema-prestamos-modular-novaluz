@@ -175,3 +175,6 @@ document.addEventListener('DOMContentLoaded', function() {
     inicializarNavegacion();
     verificarSistema();
 });
+
+// Exportar funciones al ámbito global
+window.showTab = showTab;

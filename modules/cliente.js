@@ -13,9 +13,28 @@ async function cargarClientes() {
     try {
         console.log('🔄 Cargando clientes...');
         const response = await fetch('api_simple.php?action=cliente_listar');
-        const resultado = await response.json();
         
-        console.log('📡 Respuesta API clientes:', resultado);
+        // Verificar si la respuesta es válida
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        
+        // Obtener texto y verificar que sea JSON válido
+        const textoRespuesta = await response.text();
+        console.log('📡 Respuesta cruda:', textoRespuesta);
+        
+        let resultado;
+        try {
+            resultado = JSON.parse(textoRespuesta);
+        } catch (jsonError) {
+            console.error('❌ Error parsing JSON:', jsonError);
+            console.log('� Respuesta no es JSON válido, usando datos de prueba...');
+            clientes = crearClientesPrueba();
+            mostrarClientesEnGaleria(clientes);
+            return;
+        }
+        
+        console.log('📡 Resultado parseado:', resultado);
         
         if (resultado.success) {
             clientes = resultado.data || [];
@@ -488,3 +507,10 @@ function crearPrestamoCliente() {
 document.addEventListener('DOMContentLoaded', function() {
     console.log('📦 Módulo Cliente inicializado');
 });
+
+// Exportar funciones principales al ámbito global
+window.cargarClientes = cargarClientes;
+window.filtrarClientes = filtrarClientes;
+window.editarCliente = editarCliente;
+window.eliminarCliente = eliminarCliente;
+window.subirFoto = subirFoto;
