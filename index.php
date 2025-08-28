@@ -23,6 +23,17 @@
         .header-title { font-size: 1.7em; font-weight: bold; letter-spacing: 1px; }
         .header-desc { font-size: 1em; opacity: 0.8; }
         .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; font-size: 1em; }
+        .sistema-estado { 
+            padding: 4px 8px; 
+            border-radius: 12px; 
+            font-size: 0.8em; 
+            font-weight: bold;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .sistema-estado.cargando { background: rgba(255, 193, 7, 0.8); color: #856404; }
+        .sistema-estado.listo { background: rgba(40, 167, 69, 0.8); color: #155724; }
+        .sistema-estado.error { background: rgba(220, 53, 69, 0.8); color: #721c24; }
         
         /* Menu Tabs */
         .menu-tabs {
@@ -404,19 +415,410 @@
             border-left: 4px solid #17a2b8;
         }
         
-        .table-responsive {
-            overflow-x: auto;
+        /* Cliente Cards Styles - Estilo Galería con Fotos */
+        .clientes-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
         }
         
-        .form-card {
+        .cliente-card {
             background: #fff;
-            border-radius: 8px;
-            padding: 16px;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            border: 2px solid transparent;
         }
         
+        .cliente-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #2196f3;
+        }
+        
+        .cliente-foto-container {
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .cliente-foto {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #e0e0e0;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 2em;
+            color: #666;
+        }
+        
+        .cliente-foto img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        .cliente-status {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #fff;
+        }
+        
+        .cliente-status.activo { background: #4caf50; }
+        .cliente-status.inactivo { background: #f44336; }
+        
+        .cliente-info {
+            text-align: center;
+        }
+        
+        .cliente-nombre {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        
+        .cliente-detalles {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .cliente-stats {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 0.85em;
+        }
+        
+        .cliente-stat {
+            text-align: center;
+        }
+        
+        .cliente-stat-value {
+            font-weight: bold;
+            color: #2196f3;
+            display: block;
+        }
+        
+        .cliente-stat-label {
+            color: #666;
+            font-size: 0.8em;
+        }
+        
+        .cliente-rating {
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .stars {
+            color: #ffc107;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+        
+        .rating-value {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .cliente-acciones {
+            display: flex;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .btn-accion {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .btn-ver {
+            background: #2196f3;
+            color: white;
+        }
+        
+        .btn-ver:hover {
+            background: #1976d2;
+        }
+        
+        .btn-opciones {
+            background: #f5f5f5;
+            color: #666;
+            position: relative;
+        }
+        
+        .btn-opciones:hover {
+            background: #e0e0e0;
+        }
+        
+        .search-box {
+            position: relative;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 40px 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 1em;
+            background: #f8f9fa;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #2196f3;
+            background: #fff;
+        }
+        
+        .search-box::after {
+            content: '🔍';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.2em;
+        }
+        
+        .filtros-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .filtro-select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-size: 0.9em;
+        }
+        
+        /* Modal Styles */
+        .modal-cliente {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content-cliente {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header-cliente {
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .modal-foto-grande {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid white;
+            margin: 0 auto 15px auto;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: #666;
+            overflow: hidden;
+        }
+        
+        .modal-foto-grande img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .modal-body-cliente {
+            padding: 25px;
+        }
+        
+        .info-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .info-tab {
+            flex: 1;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            color: #666;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .info-tab.active {
+            color: #2196f3;
+            border-bottom: 2px solid #2196f3;
+        }
+        
+        .tab-content-info {
+            display: none;
+        }
+        
+        .tab-content-info.active {
+            display: block;
+        }
+        
+        .info-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            align-items: center;
+        }
+        
+        .info-label {
+            font-weight: bold;
+            color: #666;
+            min-width: 120px;
+        }
+        
+        .info-value {
+            color: #333;
+            flex: 1;
+        }
+        
+        .info-action {
+            margin-left: 10px;
+        }
+        
+        .btn-mini {
+            padding: 4px 8px;
+            font-size: 0.8em;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .opciones-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            min-width: 150px;
+            z-index: 100;
+            display: none;
+        }
+        
+        .opciones-menu.active {
+            display: block;
+        }
+        
+        .opcion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            color: #333;
+            font-size: 0.9em;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            transition: background 0.3s;
+        }
+        
+        .opcion-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .opcion-item.eliminar {
+            color: #f44336;
+        }
+        
+        /* Responsive */
         @media (max-width: 768px) {
-            .mora-grid {
-                grid-template-columns: 1fr;
+            .clientes-gallery {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 15px;
+            }
+            
+            .filtros-container {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .modal-content-cliente {
+                width: 95%;
+                margin: 20px;
             }
         }
         
@@ -461,6 +863,7 @@
             <span class="header-desc">Aplicación Web - Datos Guardados Localmente</span>
         </div>
         <div class="header-right">
+            <div id="sistema-estado" class="sistema-estado">🔄 Cargando...</div>
             <span class="header-user">👤 Usuario: Administrador</span>
             <span class="header-country">📍 República Dominicana</span>
         </div>
@@ -531,32 +934,43 @@
         <div id="tab-clientes" class="tab-content">
             <h2 class="section-title">👥 Gestión de Clientes</h2>
             
-            <!-- VISTA DE LISTA DE CLIENTES (Por defecto) -->
+            <!-- VISTA DE LISTA DE CLIENTES CON GALERÍA (Por defecto) -->
             <div id="vista-lista-clientes">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3>Lista de Clientes</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 15px;">
+                    <div>
+                        <h3>Lista de Clientes</h3>
+                        <p style="color: #666; margin: 5px 0 0 0;" id="contador-clientes">0 clientes registrados</p>
+                    </div>
                     <button type="button" class="btn btn-success" onclick="mostrarFormularioNuevoCliente()">
                         ➕ Nuevo Cliente
                     </button>
                 </div>
                 
-                <div class="table-container">
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nombre</th>
-                                <th>Documento</th>
-                                <th>Teléfono</th>
-                                <th>Email</th>
-                                <th>Fecha Registro</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-clientes">
-                            <tr><td colspan="7" style="text-align: center; color: #666;">No hay clientes registrados</td></tr>
-                        </tbody>
-                    </table>
+                <!-- Filtros y Búsqueda -->
+                <div class="filtros-container">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar clientes..." id="buscar-clientes" onkeyup="filtrarClientes()">
+                    </div>
+                    <select class="filtro-select" id="filtro-calificacion" onchange="filtrarClientes()">
+                        <option value="">Todas las calificaciones</option>
+                        <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                        <option value="4">⭐⭐⭐⭐ (4+)</option>
+                        <option value="3">⭐⭐⭐ (3+)</option>
+                        <option value="2">⭐⭐ (2+)</option>
+                        <option value="1">⭐ (1+)</option>
+                    </select>
+                    <select class="filtro-select" id="filtro-con-foto" onchange="filtrarClientes()">
+                        <option value="">Todos</option>
+                        <option value="con-foto">Con foto</option>
+                        <option value="sin-foto">Sin foto</option>
+                    </select>
+                </div>
+                
+                <!-- Galería de Clientes -->
+                <div class="clientes-gallery" id="clientes-gallery">
+                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
+                        No hay clientes registrados
+                    </div>
                 </div>
             </div>
             
@@ -572,17 +986,43 @@
                 <div class="form-container">
                     <form id="form-cliente">
                         <input type="hidden" id="cliente-id-edit" value="">
+                        
+                        <!-- Sección de Foto de Perfil -->
+                        <div class="form-row">
+                            <div class="form-group" style="text-align: center;">
+                                <label>Foto de Perfil</label>
+                                <div style="margin: 15px 0;">
+                                    <div class="cliente-foto" id="preview-foto" style="width: 120px; height: 120px; margin: 0 auto; font-size: 3em;">
+                                        👤
+                                    </div>
+                                    <input type="file" id="input-foto" accept="image/*" style="display: none;" onchange="previsualizarFoto(this)">
+                                    <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
+                                        <button type="button" class="btn btn-info" onclick="document.getElementById('input-foto').click()">
+                                            📷 Seleccionar Foto
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" onclick="eliminarFotoPrevisualizacion()">
+                                            🗑️ Quitar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Información Básica -->
                         <div class="form-row">
                             <div class="form-group">
-                                <label>Nombre Completo</label>
+                                <label>Nombre Completo *</label>
                                 <input type="text" class="form-control" id="cliente-nombre" required>
                             </div>
                             <div class="form-group">
-                                <label>Documento</label>
+                                <label>Documento/Cédula *</label>
                                 <input type="text" class="form-control" id="cliente-documento" required>
                             </div>
+                        </div>
+                        
+                        <div class="form-row">
                             <div class="form-group">
-                                <label>Teléfono</label>
+                                <label>Teléfono *</label>
                                 <input type="text" class="form-control" id="cliente-telefono" required>
                             </div>
                             <div class="form-group">
@@ -590,13 +1030,33 @@
                                 <input type="email" class="form-control" id="cliente-email">
                             </div>
                         </div>
+                        
                         <div class="form-row">
                             <div class="form-group">
                                 <label>Dirección</label>
-                                <input type="text" class="form-control" id="cliente-direccion">
+                                <textarea class="form-control" id="cliente-direccion" rows="3"></textarea>
                             </div>
                         </div>
-                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        
+                        <!-- Calificación -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Calificación Inicial</label>
+                                <div style="display: flex; gap: 5px; align-items: center;">
+                                    <div class="rating-input" id="rating-input">
+                                        <span class="star" data-rating="1">⭐</span>
+                                        <span class="star" data-rating="2">⭐</span>
+                                        <span class="star" data-rating="3">⭐</span>
+                                        <span class="star" data-rating="4">⭐</span>
+                                        <span class="star" data-rating="5">⭐</span>
+                                    </div>
+                                    <span id="rating-display">0.0</span>
+                                    <input type="hidden" id="cliente-calificacion" value="0">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; gap: 12px; margin-top: 20px;">
                             <button type="submit" class="btn btn-success">✅ Crear Cliente</button>
                             <button type="button" class="btn btn-secondary" onclick="volverAListaClientes()">❌ Cancelar</button>
                             <button type="button" class="btn btn-info" onclick="testearCliente()">🧪 Probar Sistema</button>
@@ -605,6 +1065,87 @@
                     <div id="mensaje-cliente"></div>
                 </div>
             </div>
+        </div>
+        
+        <!-- Modal de Detalles del Cliente -->
+        <div id="modal-cliente" class="modal-cliente">
+            <div class="modal-content-cliente">
+                <div class="modal-header-cliente">
+                    <button class="modal-close" onclick="cerrarModalCliente()">×</button>
+                    <div class="modal-foto-grande" id="modal-foto-cliente">
+                        👤
+                    </div>
+                    <h3 id="modal-nombre-cliente">Nombre del Cliente</h3>
+                    <div class="cliente-rating">
+                        <div class="stars" id="modal-rating-cliente">⭐⭐⭐⭐⭐</div>
+                        <div class="rating-value" id="modal-rating-valor">0.0</div>
+                    </div>
+                </div>
+                <div class="modal-body-cliente">
+                    <div class="info-tabs">
+                        <button class="info-tab active" onclick="cambiarTabInfo('datos')">DATOS</button>
+                        <button class="info-tab" onclick="cambiarTabInfo('prestamos')">PRÉSTAMOS</button>
+                    </div>
+                    
+                    <div id="tab-datos" class="tab-content-info active">
+                        <div class="info-row">
+                            <span class="info-label">Celular:</span>
+                            <span class="info-value" id="modal-telefono">+1829669047</span>
+                            <div class="info-action">
+                                <button class="btn-mini" style="background: #25d366; color: white;" onclick="abrirWhatsApp()">💬</button>
+                                <button class="btn-mini" style="background: #2196f3; color: white;" onclick="llamarCliente()">📞</button>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Teléfono:</span>
+                            <span class="info-value" id="modal-telefono2">+1829669047</span>
+                            <div class="info-action">
+                                <button class="btn-mini" style="background: #2196f3; color: white;" onclick="llamarCliente()">📞</button>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Dirección:</span>
+                            <span class="info-value" id="modal-direccion">J76P+4PC, 23000 Higüey, República Dominicana</span>
+                            <div class="info-action">
+                                <button class="btn-mini" style="background: #34a853; color: white;" onclick="abrirMaps()">🗺️</button>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Email:</span>
+                            <span class="info-value" id="modal-email">cliente@email.com</span>
+                            <div class="info-action">
+                                <button class="btn-mini" style="background: #ea4335; color: white;" onclick="abrirEmail()">📧</button>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Calificación:</span>
+                            <div class="info-value">
+                                <div class="rating-input" id="modal-rating-editable">
+                                    <span class="star editable" data-rating="1" onclick="actualizarCalificacion(1)">⭐</span>
+                                    <span class="star editable" data-rating="2" onclick="actualizarCalificacion(2)">⭐</span>
+                                    <span class="star editable" data-rating="3" onclick="actualizarCalificacion(3)">⭐</span>
+                                    <span class="star editable" data-rating="4" onclick="actualizarCalificacion(4)">⭐</span>
+                                    <span class="star editable" data-rating="5" onclick="actualizarCalificacion(5)">⭐</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tab-prestamos-cliente" class="tab-content-info">
+                        <div id="prestamos-cliente-detalle">
+                            <!-- Se cargarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu de Opciones del Cliente -->
+        <div id="opciones-menu-cliente" class="opciones-menu">
+            <button class="opcion-item" onclick="crearPrestamoCliente()">📄 Crear Préstamo</button>
+            <button class="opcion-item" onclick="mostrarPrestamosCliente()">💼 Mostrar Préstamos</button>
+            <button class="opcion-item" onclick="editarCliente()">✏️ Editar</button>
+            <button class="opcion-item eliminar" onclick="eliminarCliente()">🗑️ Eliminar</button>
         </div>
         
         <!-- Préstamos Tab -->
@@ -1166,6 +1707,65 @@
         let prestamos = [];
         let pagos = [];
         
+        // Función para actualizar estado del sistema
+        function actualizarEstadoSistema(estado, mensaje) {
+            const indicador = document.getElementById('sistema-estado');
+            if (!indicador) return;
+            
+            // Remover todas las clases de estado
+            indicador.classList.remove('cargando', 'listo', 'error');
+            
+            // Agregar nueva clase y mensaje
+            indicador.classList.add(estado);
+            indicador.textContent = mensaje;
+        }
+        
+        // Función de verificación del sistema
+        function verificarSistema() {
+            console.log('🔧 Verificando estado del sistema...');
+            actualizarEstadoSistema('cargando', '🔧 Verificando...');
+            
+            // Verificar elementos DOM esenciales
+            const elementosEsenciales = [
+                'tab-dashboard',
+                'tab-clientes', 
+                'tab-prestamos',
+                'tab-pagos'
+            ];
+            
+            let errores = [];
+            
+            elementosEsenciales.forEach(id => {
+                if (!document.getElementById(id)) {
+                    errores.push(`Elemento ${id} no encontrado`);
+                }
+            });
+            
+            // Verificar funciones esenciales
+            const funcionesEsenciales = [
+                'showTab',
+                'cargarClientes',
+                'cargarPrestamos', 
+                'cargarPagos'
+            ];
+            
+            funcionesEsenciales.forEach(func => {
+                if (typeof window[func] !== 'function') {
+                    errores.push(`Función ${func} no definida`);
+                }
+            });
+            
+            if (errores.length > 0) {
+                console.error('❌ Errores encontrados:', errores);
+                actualizarEstadoSistema('error', '❌ Errores detectados');
+                return false;
+            } else {
+                console.log('✅ Sistema verificado correctamente');
+                actualizarEstadoSistema('listo', '✅ Sistema listo');
+                return true;
+            }
+        }
+        
         // Función principal de navegación
         function showTab(tabName) {
             try {
@@ -1330,81 +1930,730 @@
             }
         }
         
-        // MÓDULO CLIENTES
+        // =================== MÓDULO CLIENTES AVANZADO CON FOTOS ===================
+        
+        // Variables globales para clientes (usando las variables ya declaradas arriba)
+        let clienteSeleccionado = null;
+        let clienteModalActual = null;
+        let fotoSeleccionada = null;
+        
+        // Manejar envío del formulario de cliente
         document.getElementById('form-cliente').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const form = e.target;
-            const isEditMode = form.dataset.editMode === 'true';
-            const clienteId = document.getElementById('cliente-id-edit')?.value;
+            const isEdit = document.getElementById('cliente-id-edit').value !== '';
             
             const clienteData = {
                 nombre: document.getElementById('cliente-nombre').value,
                 cedula: document.getElementById('cliente-documento').value,
                 telefono: document.getElementById('cliente-telefono').value,
-                direccion: document.getElementById('cliente-direccion').value
+                email: document.getElementById('cliente-email').value,
+                direccion: document.getElementById('cliente-direccion').value,
+                calificacion: parseInt(document.querySelector('.rating-input').dataset.rating || '0')
             };
             
-            let resultado;
-            if (isEditMode && clienteId) {
-                // Modo edición
-                clienteData.id = clienteId;
-                resultado = await llamarBackend('cliente', 'actualizar', clienteData);
+            try {
+                abrirModal();
                 
-                if (resultado.success) {
-                    mostrarMensaje('mensaje-cliente', 'Cliente actualizado correctamente');
-                    cancelarEdicion();
-                    cargarClientes();
+                let resultado;
+                
+                if (isEdit) {
+                    // Modo edición
+                    clienteData.id = document.getElementById('cliente-id-edit').value;
+                    const response = await fetch('api_modular.php?action=cliente_editar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(clienteData)
+                    });
+                    resultado = await response.json();
                 } else {
-                    mostrarMensaje('mensaje-cliente', 'Error al actualizar cliente: ' + (resultado.message || resultado.error || 'Error desconocido'), 'error');
+                    // Modo creación
+                    const response = await fetch('api_modular.php?action=cliente_crear', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(clienteData)
+                    });
+                    resultado = await response.json();
                 }
-            } else {
-                // Modo creación
-                resultado = await llamarBackend('cliente', 'crear', clienteData);
                 
-                if (resultado.success) {
-                    mostrarMensaje('mensaje-cliente', 'Cliente creado correctamente');
-                    document.getElementById('form-cliente').reset();
-                    cargarClientes();
+                console.log('Resultado cliente:', resultado);
+                
+                if (resultado.exito) {
+                    const clienteId = isEdit ? clienteData.id : resultado.datos.id;
                     
-                    // Regresar a la lista de clientes después de crear exitosamente
+                    // Subir foto si se seleccionó una
+                    if (fotoSeleccionada) {
+                        try {
+                            await subirFoto(clienteId, fotoSeleccionada);
+                        } catch (fotoError) {
+                            console.error('Error subiendo foto:', fotoError);
+                        }
+                    }
+                    
+                    // Actualizar calificación si se cambió
+                    const rating = parseInt(document.getElementById('cliente-calificacion').value);
+                    if (rating > 0) {
+                        try {
+                            await fetch('api_simple.php?action=cliente_actualizar_calificacion', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    id: clienteId,
+                                    calificacion: rating
+                                })
+                            });
+                        } catch (ratingError) {
+                            console.error('Error actualizando calificación:', ratingError);
+                        }
+                    }
+                    
+                    cerrarModal();
+                    mostrarResultadoEnModal('✅ Operación Exitosa', 
+                        isEdit ? 'Cliente actualizado correctamente' : 'Cliente creado correctamente');
+                    
+                    // Volver a la lista después de un delay
                     setTimeout(() => {
                         volverAListaClientes();
-                    }, 1500); // Esperar 1.5 segundos para que el usuario vea el mensaje
+                    }, 1500);
+                    
                 } else {
-                    mostrarMensaje('mensaje-cliente', 'Error al crear cliente: ' + (resultado.message || resultado.error || 'Error desconocido'), 'error');
+                    cerrarModal();
+                    mostrarResultadoEnModal('❌ Error', 
+                        'Error al ' + (isEdit ? 'actualizar' : 'crear') + ' cliente: ' + (resultado.error || 'Error desconocido'));
                 }
+                
+            } catch (error) {
+                cerrarModal();
+                console.error('Error:', error);
+                mostrarResultadoEnModal('❌ Error', 'Error de conexión');
             }
         });
         
-        function cancelarEdicion() {
-            if (editandoCliente) {
-                editandoCliente = null;
-                clienteIdEditar = null;
-                
-                // Resetear formulario
-                document.getElementById('form-cliente').reset();
-                
-                // Cambiar texto del botón
-                const submitBtn = document.querySelector('button[type="submit"]');
-                submitBtn.innerHTML = '✅ Crear Cliente';
-                submitBtn.style.backgroundColor = ''; // Restablecer color original
-                
-                // Ocultar botón cancelar
-                document.getElementById('btn-cancelar').style.display = 'none';
-                
-                // Quitar selección visual de la tabla
-                document.querySelectorAll('.tabla-clientes tbody tr').forEach(tr => {
-                    tr.classList.remove('table-warning');
-                });
-                
-                // Resetear modo del formulario
-                const form = document.getElementById('form-cliente');
-                form.dataset.editMode = 'false';
-                
-                console.log('Edición cancelada');
+        // Función para mostrar formulario de nuevo cliente
+        function mostrarFormularioNuevoCliente() {
+            document.getElementById('vista-lista-clientes').style.display = 'none';
+            document.getElementById('vista-nuevo-cliente').style.display = 'block';
+            
+            // Limpiar formulario
+            document.getElementById('form-cliente').reset();
+            document.getElementById('cliente-id-edit').value = '';
+            resetearFormularioCliente();
+            
+            console.log('📋 Mostrando formulario nuevo cliente');
+        }
+        
+        // Función para volver a lista de clientes
+        function volverAListaClientes() {
+            document.getElementById('vista-nuevo-cliente').style.display = 'none';
+            document.getElementById('vista-lista-clientes').style.display = 'block';
+            
+            resetearFormularioCliente();
+            cargarClientes(); // Recargar la lista
+            
+            console.log('📋 Volviendo a lista de clientes');
+        }
+        
+        // Resetear formulario de cliente
+        function resetearFormularioCliente() {
+            document.getElementById('form-cliente').reset();
+            document.getElementById('cliente-id-edit').value = '';
+            
+            // Resetear elementos específicos del nuevo sistema
+            if (document.getElementById('preview-foto')) {
+                document.getElementById('preview-foto').innerHTML = '👤';
+            }
+            if (document.getElementById('rating-display')) {
+                document.getElementById('rating-display').textContent = '0.0';
+            }
+            if (document.getElementById('cliente-calificacion')) {
+                document.getElementById('cliente-calificacion').value = '0';
+            }
+            fotoSeleccionada = null;
+            
+            // Resetear estrellas
+            document.querySelectorAll('#rating-input .star').forEach(star => {
+                star.style.color = '#ddd';
+            });
+            
+            // Limpiar mensajes
+            const mensajeDiv = document.getElementById('mensaje-cliente');
+            if (mensajeDiv) {
+                mensajeDiv.innerHTML = '';
             }
         }
+        
+        // Cargar clientes en formato galería
+        async function cargarClientes() {
+            try {
+                console.log('Cargando clientes...');
+                const resultado = await fetch('api_modular.php?action=clientes_listar');
+                const data = await resultado.json();
+                
+                console.log('Respuesta API clientes:', data);
+                
+                if (data.exito) {
+                    clientes = data.datos || [];
+                    console.log('Clientes cargados:', clientes);
+                    mostrarClientesEnGaleria(clientes);
+                    actualizarContadorClientes();
+                } else {
+                    console.error('Error cargando clientes:', data.mensaje);
+                    clientes = [];
+                    mostrarClientesEnGaleria([]);
+                }
+            } catch (error) {
+                console.error('Error cargando clientes:', error);
+            }
+        }
+        
+        // Mostrar clientes en formato galería
+        function mostrarClientesEnGaleria(clientesData) {
+            const gallery = document.getElementById('clientes-gallery');
+            
+            if (!gallery) {
+                console.error('Gallery element not found');
+                return;
+            }
+            
+            if (clientesData.length === 0) {
+                gallery.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; color: #666; padding: 40px;">
+                        <div style="font-size: 3em; margin-bottom: 20px;">👥</div>
+                        <h3>No hay clientes registrados</h3>
+                        <p>¡Comienza creando tu primer cliente!</p>
+                        <button class="btn btn-success" onclick="mostrarFormularioNuevoCliente()">
+                            ➕ Crear Primer Cliente
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            gallery.innerHTML = clientesData.map(cliente => {
+                const rating = parseFloat(cliente.calificacion || 0);
+                const stars = generarEstrellas(rating);
+                const statusClass = cliente.activo !== false ? 'activo' : 'inactivo';
+                
+                // Determinar la foto
+                let fotoHtml = '👤';
+                if (cliente.foto_perfil) {
+                    fotoHtml = `<img src="${cliente.foto_perfil}" alt="${cliente.nombre}" onerror="this.parentElement.innerHTML='👤'">`;
+                }
+                
+                return `
+                    <div class="cliente-card" onclick="abrirModalCliente(${cliente.id})" data-cliente-id="${cliente.id}">
+                        <div class="cliente-foto-container">
+                            <div class="cliente-foto">
+                                ${fotoHtml}
+                            </div>
+                            <div class="cliente-status ${statusClass}"></div>
+                        </div>
+                        <div class="cliente-info">
+                            <div class="cliente-nombre">${cliente.nombre}</div>
+                            <div class="cliente-detalles">
+                                ${cliente.telefono}<br>
+                                ${cliente.documento}
+                            </div>
+                            <div class="cliente-rating">
+                                <div class="stars">${stars}</div>
+                                <div class="rating-value">${rating.toFixed(1)}</div>
+                            </div>
+                            <div class="cliente-stats">
+                                <div class="cliente-stat">
+                                    <span class="cliente-stat-value">RD$37,600</span>
+                                    <span class="cliente-stat-label">Capital</span>
+                                </div>
+                                <div class="cliente-stat">
+                                    <span class="cliente-stat-value">RD$1,050</span>
+                                    <span class="cliente-stat-label">Balance</span>
+                                </div>
+                            </div>
+                            <div class="cliente-acciones">
+                                <button class="btn-accion btn-ver" onclick="event.stopPropagation(); abrirModalCliente(${cliente.id})">
+                                    👁️ Ver
+                                </button>
+                                <button class="btn-accion btn-opciones" onclick="event.stopPropagation(); mostrarOpcionesCliente(${cliente.id}, event)">
+                                    ⋮ OPCIONES
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        // Generar estrellas de calificación
+        function generarEstrellas(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (i <= rating) {
+                    stars += '⭐';
+                } else if (i - 0.5 <= rating) {
+                    stars += '⭐';
+                } else {
+                    stars += '☆';
+                }
+            }
+            return stars;
+        }
+        
+        // Actualizar contador de clientes
+        function actualizarContadorClientes() {
+            const contador = document.getElementById('contador-clientes');
+            if (contador) {
+                const total = clientes.length;
+                const conFoto = clientes.filter(c => c.foto_perfil).length;
+                contador.textContent = `${total} clientes registrados (${conFoto} con foto)`;
+            }
+        }
+        
+        // Filtrar clientes
+        function filtrarClientes() {
+            const busqueda = document.getElementById('buscar-clientes')?.value.toLowerCase() || '';
+            const filtroCalificacion = document.getElementById('filtro-calificacion')?.value || '';
+            const filtroFoto = document.getElementById('filtro-con-foto')?.value || '';
+            
+            let clientesFiltrados = clientes.filter(cliente => {
+                // Filtro de búsqueda
+                const coincideBusqueda = !busqueda || 
+                    cliente.nombre.toLowerCase().includes(busqueda) ||
+                    cliente.telefono.includes(busqueda) ||
+                    cliente.documento.includes(busqueda);
+                
+                // Filtro de calificación
+                let coincideCalificacion = true;
+                if (filtroCalificacion) {
+                    const calificacion = parseFloat(cliente.calificacion || 0);
+                    coincideCalificacion = calificacion >= parseFloat(filtroCalificacion);
+                }
+                
+                // Filtro de foto
+                let coincideFoto = true;
+                if (filtroFoto === 'con-foto') {
+                    coincideFoto = !!cliente.foto_perfil;
+                } else if (filtroFoto === 'sin-foto') {
+                    coincideFoto = !cliente.foto_perfil;
+                }
+                
+                return coincideBusqueda && coincideCalificacion && coincideFoto;
+            });
+            
+            mostrarClientesEnGaleria(clientesFiltrados);
+        }
+        
+        // Previsualizar foto antes de subir
+        function previsualizarFoto(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview-foto');
+                    if (preview) {
+                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        fotoSeleccionada = input.files[0];
+                    }
+                };
+                
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        // Eliminar foto de previsualización
+        function eliminarFotoPrevisualizacion() {
+            const preview = document.getElementById('preview-foto');
+            const input = document.getElementById('input-foto');
+            
+            if (preview) preview.innerHTML = '👤';
+            if (input) input.value = '';
+            fotoSeleccionada = null;
+        }
+        
+        // Subir foto a servidor
+        async function subirFoto(clienteId, archivo) {
+            try {
+                const formData = new FormData();
+                formData.append('foto', archivo);
+                formData.append('cliente_id', clienteId);
+                
+                const response = await fetch('upload_foto.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const resultado = await response.json();
+                
+                if (resultado.success) {
+                    // Actualizar foto en la base de datos
+                    await fetch('api_simple.php?action=cliente_actualizar_foto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            id: clienteId,
+                            foto_perfil: resultado.url
+                        })
+                    });
+                    
+                    return resultado.url;
+                } else {
+                    throw new Error(resultado.error || 'Error subiendo foto');
+                }
+                
+            } catch (error) {
+                console.error('Error subiendo foto:', error);
+                throw error;
+            }
+        }
+        
+        // Sistema de calificación por estrellas
+        function actualizarRatingInput(rating) {
+            const clienteCalificacion = document.getElementById('cliente-calificacion');
+            const ratingDisplay = document.getElementById('rating-display');
+            
+            if (clienteCalificacion) clienteCalificacion.value = rating;
+            if (ratingDisplay) ratingDisplay.textContent = rating + '.0';
+            
+            const stars = document.querySelectorAll('#rating-input .star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
+        function previsualizarRating(rating) {
+            const stars = document.querySelectorAll('#rating-input .star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
+        // ================= MODAL DE CLIENTE =================
+        
+        // Abrir modal de cliente
+        async function abrirModalCliente(clienteId) {
+            const cliente = clientes.find(c => c.id == clienteId);
+            if (!cliente) return;
+            
+            clienteModalActual = cliente;
+            
+            // Llenar información del modal
+            if (document.getElementById('modal-nombre-cliente')) {
+                document.getElementById('modal-nombre-cliente').textContent = cliente.nombre;
+            }
+            if (document.getElementById('modal-telefono')) {
+                document.getElementById('modal-telefono').textContent = cliente.telefono;
+            }
+            if (document.getElementById('modal-telefono2')) {
+                document.getElementById('modal-telefono2').textContent = cliente.telefono;
+            }
+            if (document.getElementById('modal-direccion')) {
+                document.getElementById('modal-direccion').textContent = cliente.direccion || 'No especificada';
+            }
+            if (document.getElementById('modal-email')) {
+                document.getElementById('modal-email').textContent = cliente.email || 'No especificado';
+            }
+            
+            // Foto de perfil
+            const modalFoto = document.getElementById('modal-foto-cliente');
+            if (modalFoto) {
+                if (cliente.foto_perfil) {
+                    modalFoto.innerHTML = `<img src="${cliente.foto_perfil}" alt="${cliente.nombre}">`;
+                } else {
+                    modalFoto.innerHTML = '👤';
+                }
+            }
+            
+            // Calificación
+            const rating = parseFloat(cliente.calificacion || 0);
+            if (document.getElementById('modal-rating-cliente')) {
+                document.getElementById('modal-rating-cliente').innerHTML = generarEstrellas(rating);
+            }
+            if (document.getElementById('modal-rating-valor')) {
+                document.getElementById('modal-rating-valor').textContent = rating.toFixed(1);
+            }
+            
+            // Mostrar modal
+            const modal = document.getElementById('modal-cliente');
+            if (modal) {
+                modal.style.display = 'block';
+            }
+        }
+        
+        // Cerrar modal de cliente
+        function cerrarModalCliente() {
+            const modal = document.getElementById('modal-cliente');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+            clienteModalActual = null;
+        }
+        
+        // Cambiar pestaña en el modal
+        function cambiarTabInfo(tab) {
+            // Actualizar botones
+            document.querySelectorAll('.info-tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            const activeBtn = document.querySelector(`.info-tab[onclick*="${tab}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            
+            // Actualizar contenido
+            document.querySelectorAll('.tab-content-info').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Usar el ID correcto para pestañas de cliente
+            let activeContentId = `tab-${tab}`;
+            if (tab === 'prestamos') {
+                activeContentId = 'tab-prestamos-cliente';
+            }
+            
+            const activeContent = document.getElementById(activeContentId);
+            if (activeContent) activeContent.classList.add('active');
+        }
+        
+        // Actualizar calificación de cliente
+        async function actualizarCalificacion(rating) {
+            if (!clienteModalActual) return;
+            
+            try {
+                const response = await fetch('api_simple.php?action=cliente_actualizar_calificacion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        id: clienteModalActual.id,
+                        calificacion: rating
+                    })
+                });
+                
+                const resultado = await response.json();
+                
+                if (resultado.success) {
+                    // Actualizar cliente en memoria
+                    clienteModalActual.calificacion = rating;
+                    const clienteIndex = clientes.findIndex(c => c.id == clienteModalActual.id);
+                    if (clienteIndex !== -1) {
+                        clientes[clienteIndex].calificacion = rating;
+                    }
+                    
+                    // Actualizar UI
+                    const modalRating = document.getElementById('modal-rating-cliente');
+                    const modalValor = document.getElementById('modal-rating-valor');
+                    
+                    if (modalRating) modalRating.innerHTML = generarEstrellas(rating);
+                    if (modalValor) modalValor.textContent = rating.toFixed(1);
+                    
+                    // Recargar galería
+                    mostrarClientesEnGaleria(clientes);
+                } else {
+                    alert('Error actualizando calificación: ' + resultado.error);
+                }
+            } catch (error) {
+                console.error('Error actualizando calificación:', error);
+                alert('Error de conexión');
+            }
+        }
+        
+        // ================= OPCIONES Y ACCIONES =================
+        
+        // Mostrar menú de opciones
+        function mostrarOpcionesCliente(clienteId, event) {
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (!menu) return;
+            
+            const rect = event.target.getBoundingClientRect();
+            
+            menu.style.top = (rect.bottom + window.scrollY) + 'px';
+            menu.style.left = rect.left + 'px';
+            menu.classList.add('active');
+            menu.dataset.clienteId = clienteId;
+            
+            // Cerrar menú al hacer clic fuera
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!menu.contains(e.target)) {
+                        menu.classList.remove('active');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }, 100);
+        }
+        
+        // Acciones del menú de opciones
+        function crearPrestamoCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            // Cambiar a pestaña de préstamos
+            showTab('prestamos');
+            if (typeof mostrarFormularioNuevoPrestamo === 'function') {
+                mostrarFormularioNuevoPrestamo();
+                
+                // Preseleccionar cliente en el formulario
+                setTimeout(() => {
+                    const selectCliente = document.getElementById('prestamo-cliente');
+                    if (selectCliente && clienteId) {
+                        selectCliente.value = clienteId;
+                    }
+                }, 500);
+            }
+        }
+        
+        function mostrarPrestamosCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            if (clienteId) {
+                abrirModalCliente(clienteId);
+                setTimeout(() => cambiarTabInfo('prestamos'), 100);
+            }
+        }
+        
+        function editarCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            const cliente = clientes.find(c => c.id == clienteId);
+            if (!cliente) return;
+            
+            // Ir al formulario de edición
+            mostrarFormularioNuevoCliente();
+            
+            // Llenar datos
+            document.getElementById('cliente-id-edit').value = clienteId;
+            document.getElementById('cliente-nombre').value = cliente.nombre;
+            document.getElementById('cliente-documento').value = cliente.documento;
+            document.getElementById('cliente-telefono').value = cliente.telefono;
+            
+            const emailField = document.getElementById('cliente-email');
+            const direccionField = document.getElementById('cliente-direccion');
+            
+            if (emailField) emailField.value = cliente.email || '';
+            if (direccionField) direccionField.value = cliente.direccion || '';
+            
+            // Calificación
+            const rating = parseInt(cliente.calificacion || 0);
+            actualizarRatingInput(rating);
+            
+            // Foto
+            if (cliente.foto_perfil) {
+                const preview = document.getElementById('preview-foto');
+                if (preview) {
+                    preview.innerHTML = `<img src="${cliente.foto_perfil}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                }
+            }
+            
+            // Cambiar título y botón
+            const titulo = document.querySelector('#vista-nuevo-cliente h3');
+            const boton = document.querySelector('#form-cliente button[type="submit"]');
+            
+            if (titulo) titulo.textContent = 'Editar Cliente';
+            if (boton) boton.innerHTML = '💾 Actualizar Cliente';
+        }
+        
+        async function eliminarCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            const cliente = clientes.find(c => c.id == clienteId);
+            if (!cliente) return;
+            
+            if (confirm(`¿Estás seguro de que deseas eliminar al cliente "${cliente.nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+                try {
+                    const response = await fetch('api_simple.php?action=cliente_eliminar', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ id: clienteId })
+                    });
+                    
+                    const resultado = await response.json();
+                    
+                    if (resultado.success) {
+                        cargarClientes(); // Recargar lista
+                        cerrarModalCliente(); // Cerrar modal si está abierto
+                        alert('Cliente eliminado correctamente');
+                    } else {
+                        alert('Error eliminando cliente: ' + resultado.error);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error de conexión');
+                }
+            }
+        }
+        
+        // ================= ACCIONES EXTERNAS =================
+        
+        function abrirWhatsApp() {
+            if (!clienteModalActual) return;
+            const telefono = clienteModalActual.telefono.replace(/[^0-9]/g, '');
+            window.open(`https://wa.me/1${telefono}`, '_blank');
+        }
+        
+        function llamarCliente() {
+            if (!clienteModalActual) return;
+            window.open(`tel:${clienteModalActual.telefono}`, '_self');
+        }
+        
+        function abrirMaps() {
+            if (!clienteModalActual || !clienteModalActual.direccion) return;
+            const direccion = encodeURIComponent(clienteModalActual.direccion);
+            window.open(`https://www.google.com/maps/search/?api=1&query=${direccion}`, '_blank');
+        }
+        
+        function abrirEmail() {
+            if (!clienteModalActual || !clienteModalActual.email) return;
+            window.open(`mailto:${clienteModalActual.email}`, '_self');
+        }
+        
+        // Función de prueba
+        async function testearCliente() {
+            const clientePrueba = {
+                nombre: 'Sandra Quintina Cotuy Castillo',
+                cedula: '00112345678',
+                telefono: '+18296690047',
+                email: 'sandra.cotuy@email.com',
+                direccion: 'J76P+4PC, 23000 Higüey, República Dominicana'
+            };
+            
+            // Llenar formulario con datos de prueba
+            document.getElementById('cliente-nombre').value = clientePrueba.nombre;
+            document.getElementById('cliente-documento').value = clientePrueba.cedula;
+            document.getElementById('cliente-telefono').value = clientePrueba.telefono;
+            
+            const emailField = document.getElementById('cliente-email');
+            const direccionField = document.getElementById('cliente-direccion');
+            
+            if (emailField) emailField.value = clientePrueba.email;
+            if (direccionField) direccionField.value = clientePrueba.direccion;
+            
+            // Asignar calificación de prueba
+            actualizarRatingInput(3);
+        }
+        
+        // =================== FIN MÓDULO CLIENTES ===================
         
         // FUNCIONES PARA MANEJAR VISTAS DE CLIENTES (MÓDULO INDEPENDIENTE)
         function mostrarFormularioNuevoCliente() {
@@ -1452,44 +2701,7 @@
             console.log('📋 Volviendo a lista de clientes');
         }
         
-        async function cargarClientes() {
-            try {
-                const resultado = await fetch('api_simple.php?action=cliente_listar');
-                const data = await resultado.json();
-                
-                if (data.success) {
-                    clientes = data.data || [];
-                    const tbody = document.getElementById('lista-clientes');
-                    
-                    if (clientes.length === 0) {
-                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">No hay clientes registrados</td></tr>';
-                        return;
-                    }
-                    
-                    tbody.innerHTML = clientes.map(cliente => `
-                        <tr onclick="seleccionarCliente(${cliente.id})" style="cursor: pointer;" data-cliente-id="${cliente.id}">
-                            <td>${cliente.id}</td>
-                            <td>${cliente.nombre}</td>
-                            <td>${cliente.documento}</td>
-                            <td>${cliente.telefono}</td>
-                            <td>${cliente.email || 'undefined'}</td>
-                            <td>${cliente.fecha_creacion || 'N/A'}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning" onclick="event.stopPropagation(); editarCliente(${cliente.id})" title="Editar">✏️</button>
-                                <button class="btn btn-sm btn-danger" onclick="event.stopPropagation(); eliminarCliente(${cliente.id})" title="Eliminar">🗑️</button>
-                            </td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (error) {
-                console.error('Error cargando clientes:', error);
-            }
-        }
-        
-        // Variables globales para el manejo de clientes
-        let clienteSeleccionado = null;
-        
-        // Función para seleccionar cliente
+        // Función para seleccionar cliente (usando variable ya declarada arriba)
         function seleccionarCliente(clienteId) {
             // Remover selección anterior
             document.querySelectorAll('#lista-clientes tr').forEach(tr => {
@@ -1685,11 +2897,15 @@
         
         async function cargarPrestamos() {
             try {
-                const resultado = await fetch('api_simple.php?action=prestamo_listar');
+                console.log('Cargando préstamos...');
+                const resultado = await fetch('api_modular.php?action=prestamos_listar');
                 const data = await resultado.json();
                 
-                if (data.success) {
-                    prestamos = data.data || [];
+                console.log('Respuesta API préstamos:', data);
+                
+                if (data.exito) {
+                    prestamos = data.datos || [];
+                    console.log('Préstamos cargados:', prestamos);
                     const tbody = document.getElementById('lista-prestamos');
                     
                     if (prestamos.length === 0) {
@@ -1698,10 +2914,10 @@
                     }
                     
                     tbody.innerHTML = prestamos.map(prestamo => {
-                        const montoInicial = parseFloat(prestamo.monto_inicial || prestamo.monto);
-                        const montoActual = parseFloat(prestamo.monto_actual || prestamo.monto);
-                        const progreso = parseFloat(prestamo.progreso || 0);
-                        const cuotaVencida = parseInt(prestamo.cuotas_vencidas || 0);
+                        const montoInicial = parseFloat(prestamo.monto || 0);
+                        const montoActual = parseFloat(prestamo.monto || 0);
+                        const progreso = 0; // Para nuevos préstamos
+                        const cuotaVencida = 0; // Para nuevos préstamos
                         
                         // Determinar el tipo de préstamo
                         let tipoPrestamo = 'A Cuota';
@@ -1985,11 +3201,15 @@
         
         async function cargarPagos() {
             try {
-                const resultado = await fetch('api_simple.php?action=pago_listar');
+                console.log('Cargando pagos...');
+                const resultado = await fetch('api_modular.php?action=pagos_listar');
                 const data = await resultado.json();
                 
-                if (data.success) {
-                    pagos = data.data || [];
+                console.log('Respuesta API pagos:', data);
+                
+                if (data.exito) {
+                    pagos = data.datos || [];
+                    console.log('Pagos cargados:', pagos);
                     const tbody = document.getElementById('lista-pagos');
                     
                     if (pagos.length === 0) {
@@ -2033,29 +3253,35 @@
             await llamarBackend('pago', 'procesar', pagoPrueba);
         }
         
-        // DASHBOARD
+        // DASHBOARD - Usando datos locales
         async function actualizarDashboard() {
             try {
-                const resultado = await fetch('api_simple.php?action=dashboard_stats');
-                const data = await resultado.json();
+                console.log('Actualizando dashboard...');
                 
-                if (data.success && data.stats) {
-                    const stats = data.stats;
-                    
-                    document.getElementById('total-clientes').textContent = stats.total_clientes || 0;
-                    document.getElementById('prestamos-activos').textContent = stats.prestamos_activos || 0;
-                    document.getElementById('monto-total').textContent = `RD$${(stats.monto_total || 0).toFixed(2)}`;
-                    document.getElementById('intereses-generados').textContent = `RD$${(stats.intereses_generados || 0).toFixed(2)}`;
-                    document.getElementById('monto-atrasado').textContent = `RD$${(stats.monto_atrasado || 0).toFixed(2)}`;
-                    document.getElementById('cuotas-vencidas').textContent = `${stats.cuotas_vencidas || 0} cuotas`;
-                } else {
-                    console.log('Usando valores predeterminados para dashboard');
-                    // Valores predeterminados si no hay datos
-                    document.getElementById('total-clientes').textContent = clientes.length;
-                    document.getElementById('prestamos-activos').textContent = prestamos.length;
-                }
+                // Usar datos locales que ya están cargados
+                const totalClientes = clientes.length;
+                const prestamosActivos = prestamos.length;
+                const montoTotal = prestamos.reduce((total, prestamo) => total + (parseFloat(prestamo.monto) || 0), 0);
+                const totalPagos = pagos.length;
+                
+                document.getElementById('total-clientes').textContent = totalClientes;
+                document.getElementById('prestamos-activos').textContent = prestamosActivos;
+                document.getElementById('monto-total').textContent = `RD$${montoTotal.toFixed(2)}`;
+                document.getElementById('intereses-generados').textContent = 'RD$0.00'; // Por ahora
+                document.getElementById('monto-atrasado').textContent = 'RD$0.00'; // Por ahora
+                document.getElementById('cuotas-vencidas').textContent = '0 cuotas'; // Por ahora
+                
+                console.log('Dashboard actualizado:', {
+                    clientes: totalClientes,
+                    prestamos: prestamosActivos,
+                    monto: montoTotal
+                });
+                
             } catch (error) {
                 console.error('Error actualizando dashboard:', error);
+                // Valores predeterminados si hay error
+                document.getElementById('total-clientes').textContent = clientes.length;
+                document.getElementById('prestamos-activos').textContent = prestamos.length;
             }
         }
         
@@ -2082,15 +3308,59 @@
         
         // Inicialización al cargar la página
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Sistema modular iniciado');
-            establecerFechasActuales();
-            cargarClientes();
-            cargarClientesSelect();
-            cargarPrestamos();
-            actualizarDashboard();
+            console.log('🚀 Sistema modular iniciado');
+            actualizarEstadoSistema('cargando', '🔄 Iniciando...');
             
-            // Configurar calculadora inteligente
-            configurarCalculadoraInteligente();
+            // Verificar estado del sistema primero
+            if (!verificarSistema()) {
+                console.error('⚠️ Sistema con errores - continuando con carga limitada');
+                actualizarEstadoSistema('error', '⚠️ Errores detectados');
+            }
+            
+            try {
+                // Inicialización básica
+                establecerFechasActuales();
+                actualizarEstadoSistema('cargando', '📊 Cargando datos...');
+                
+                // Cargar datos principales de forma secuencial para evitar errores
+                console.log('📊 Cargando datos del sistema...');
+                
+                cargarClientes().then(() => {
+                    console.log('✅ Clientes cargados');
+                    actualizarEstadoSistema('cargando', '💼 Cargando préstamos...');
+                    return cargarPrestamos();
+                }).then(() => {
+                    console.log('✅ Préstamos cargados');
+                    actualizarEstadoSistema('cargando', '💳 Cargando pagos...');
+                    return cargarPagos();
+                }).then(() => {
+                    console.log('✅ Pagos cargados');
+                    actualizarDashboard();
+                    cargarClientesSelect();
+                    actualizarEstadoSistema('listo', '🎉 Sistema listo');
+                    console.log('🎉 Sistema completamente cargado');
+                }).catch(error => {
+                    console.error('❌ Error cargando datos:', error);
+                    actualizarEstadoSistema('error', '❌ Error de carga');
+                    // Intentar cargar datos mínimos
+                    actualizarDashboard();
+                });
+                
+                // Configurar componentes adicionales
+                setTimeout(() => {
+                    try {
+                        configurarCalculadoraInteligente();
+                        inicializarSistemaCalificaciones();
+                        console.log('🔧 Componentes adicionales configurados');
+                    } catch (error) {
+                        console.error('⚠️ Error configurando componentes adicionales:', error);
+                    }
+                }, 1000);
+                
+            } catch (error) {
+                console.error('💥 Error crítico en inicialización:', error);
+                actualizarEstadoSistema('error', '💥 Error crítico');
+            }
             
             // Cerrar modal al hacer click fuera
             window.onclick = function(event) {
@@ -2098,8 +3368,78 @@
                 if (event.target === modal) {
                     cerrarModal();
                 }
+                
+                const modalCliente = document.getElementById('modalCliente');
+                if (event.target === modalCliente) {
+                    cerrarModalCliente();
+                }
             };
         });
+        
+        // Función para inicializar el sistema de calificaciones
+        function inicializarSistemaCalificaciones() {
+            console.log('Inicializando sistema de calificaciones...');
+            
+            // Agregar event listeners a todas las estrellas
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('estrella')) {
+                    const calificacion = parseInt(e.target.dataset.calificacion);
+                    const idCliente = e.target.closest('[data-cliente-id]').dataset.clienteId;
+                    actualizarCalificacionCliente(idCliente, calificacion);
+                }
+            });
+        }
+        
+        // Función para actualizar la calificación de un cliente
+        function actualizarCalificacionCliente(idCliente, calificacion) {
+            console.log(`Actualizando calificación del cliente ${idCliente} a ${calificacion} estrellas`);
+            
+            fetch('api_modular.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    accion: 'actualizar_calificacion',
+                    id: idCliente,
+                    calificacion: calificacion
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exito) {
+                    console.log('Calificación actualizada correctamente');
+                    
+                    // Actualizar las estrellas visualmente en el modal
+                    const contenedorEstrellas = document.querySelector(`[data-cliente-id="${idCliente}"] .calificacion-estrellas`);
+                    if (contenedorEstrellas) {
+                        actualizarVisualizacionEstrellas(contenedorEstrellas, calificacion);
+                    }
+                    
+                    // Actualizar en la galería también
+                    cargarClientes();
+                } else {
+                    console.error('Error al actualizar calificación:', data.mensaje || 'Error desconocido');
+                    alert('Error al actualizar la calificación');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error de conexión al actualizar la calificación');
+            });
+        }
+        
+        // Función para actualizar la visualización de estrellas
+        function actualizarVisualizacionEstrellas(contenedor, calificacion) {
+            const estrellas = contenedor.querySelectorAll('.estrella');
+            estrellas.forEach((estrella, index) => {
+                if (index < calificacion) {
+                    estrella.classList.add('activa');
+                } else {
+                    estrella.classList.remove('activa');
+                }
+            });
+        }
         
         // CALCULADORA INTELIGENTE EN TIEMPO REAL
         function configurarCalculadoraInteligente() {

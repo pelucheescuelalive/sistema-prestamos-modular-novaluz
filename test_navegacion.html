@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test de Navegación</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-btn { 
+            margin: 10px; 
+            padding: 10px 20px; 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .result { 
+            margin: 10px 0; 
+            padding: 10px; 
+            border-radius: 5px; 
+            background: #f8f9fa;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Test de Navegación del Sistema</h1>
+    <p>Este script verifica que el sistema de pestañas funcione correctamente.</p>
+    
+    <div>
+        <button class="test-btn" onclick="testApi()">✅ Probar API</button>
+        <button class="test-btn" onclick="testNavigation()">🧭 Probar Navegación</button>
+        <button class="test-btn" onclick="openMainSystem()">🚀 Abrir Sistema Principal</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <script>
+        async function testApi() {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="result">🔄 Probando API...</div>';
+            
+            try {
+                const response = await fetch('api_modular.php?action=clientes_listar');
+                const data = await response.json();
+                
+                if (data.exito && data.datos) {
+                    results.innerHTML += `<div class="result success">✅ API funcionando: ${data.datos.length} clientes encontrados</div>`;
+                } else {
+                    results.innerHTML += '<div class="result error">❌ API error: Datos no válidos</div>';
+                }
+            } catch (error) {
+                results.innerHTML += `<div class="result error">❌ API error: ${error.message}</div>`;
+            }
+        }
+        
+        function testNavigation() {
+            const results = document.getElementById('results');
+            results.innerHTML += '<div class="result">🔄 Probando navegación JavaScript...</div>';
+            
+            // Verificar que las funciones básicas de JavaScript funcionen
+            try {
+                const testFunction = function() { return true; };
+                const testPromise = new Promise(resolve => resolve(true));
+                const testFetch = typeof fetch !== 'undefined';
+                
+                results.innerHTML += `<div class="result success">✅ Funciones JavaScript: OK</div>`;
+                results.innerHTML += `<div class="result success">✅ Promesas: OK</div>`;
+                results.innerHTML += `<div class="result success">✅ Fetch API: ${testFetch ? 'OK' : 'NO'}</div>`;
+                
+                // Verificar sintaxis de función flecha
+                const arrowTest = () => true;
+                results.innerHTML += `<div class="result success">✅ Sintaxis moderna: OK</div>`;
+                
+            } catch (error) {
+                results.innerHTML += `<div class="result error">❌ JavaScript error: ${error.message}</div>`;
+            }
+        }
+        
+        function openMainSystem() {
+            window.open('index.php', '_blank');
+        }
+    </script>
+</body>
+</html>

@@ -41,9 +41,41 @@ try {
                 sendResponse(false, null, 'Método no permitido', 405);
             }
             $cliente = new Cliente();
-            $resultado = $cliente->crear($data['nombre'], $data['telefono'], $data['direccion'], $data['cedula']);
+            $resultado = $cliente->crear(
+                $data['nombre'], 
+                $data['telefono'], 
+                $data['direccion'], 
+                $data['cedula'],
+                $data['email'] ?? ''
+            );
             if ($resultado['success']) {
                 sendResponse(true, $resultado, 'Cliente creado correctamente');
+            } else {
+                sendResponse(false, null, $resultado['error'], 400);
+            }
+            break;
+
+        case 'cliente_actualizar_foto':
+            if ($method !== 'POST') {
+                sendResponse(false, null, 'Método no permitido', 405);
+            }
+            $cliente = new Cliente();
+            $resultado = $cliente->actualizarFoto($data['id'], $data['foto_perfil']);
+            if ($resultado['success']) {
+                sendResponse(true, $resultado, 'Foto actualizada correctamente');
+            } else {
+                sendResponse(false, null, $resultado['error'], 400);
+            }
+            break;
+
+        case 'cliente_actualizar_calificacion':
+            if ($method !== 'POST') {
+                sendResponse(false, null, 'Método no permitido', 405);
+            }
+            $cliente = new Cliente();
+            $resultado = $cliente->actualizarCalificacion($data['id'], $data['calificacion']);
+            if ($resultado['success']) {
+                sendResponse(true, $resultado, 'Calificación actualizada correctamente');
             } else {
                 sendResponse(false, null, $resultado['error'], 400);
             }

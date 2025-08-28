@@ -5,7 +5,10 @@
         "telefono": "565464",
         "direccion": "",
         "id": 5,
-        "fecha_creacion": "2025-08-28 16:13:06"
+        "fecha_creacion": "2025-08-28 16:13:06",
+        "foto_perfil": null,
+        "calificacion": 0,
+        "email": ""
     },
     {
         "nombre": "Glenys Altagracia Morel",
@@ -13,6 +16,9 @@
         "telefono": "565464s",
         "direccion": "",
         "id": 2,
-        "fecha_creacion": "2025-08-28 19:55:56"
+        "fecha_creacion": "2025-08-28 19:55:56",
+        "foto_perfil": null,
+        "calificacion": 0,
+        "email": ""
     }
 ]

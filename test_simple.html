@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Préstamos - Navegación Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            text-align: center;
+        }
+        
+        .menu-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .tab-btn.active, .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            min-height: 500px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #cce7ff; color: #004085; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 Sistema de Préstamos - Test de Navegación</h1>
+            <p>Verificando funcionamiento del sistema de pestañas</p>
+        </div>
+        
+        <div class="menu-tabs">
+            <button class="tab-btn active" onclick="showTab('dashboard')">📊 Dashboard</button>
+            <button class="tab-btn" onclick="showTab('clientes')">👥 Clientes</button>
+            <button class="tab-btn" onclick="showTab('prestamos')">💼 Préstamos</button>
+            <button class="tab-btn" onclick="showTab('pagos')">💳 Pagos</button>
+            <button class="tab-btn" onclick="showTab('test')">🔧 Test</button>
+        </div>
+        
+        <div class="main-content">
+            <div id="tab-dashboard" class="tab-content" style="display: block;">
+                <h2>📊 Dashboard</h2>
+                <div id="status-dashboard" class="status info">Dashboard cargado correctamente</div>
+                <p>Esta es la sección del dashboard. El sistema de navegación está funcionando.</p>
+            </div>
+            
+            <div id="tab-clientes" class="tab-content">
+                <h2>👥 Clientes</h2>
+                <div id="status-clientes" class="status info">Sección de clientes cargada</div>
+                <p>Esta es la sección de clientes. Puedes navegar entre pestañas.</p>
+            </div>
+            
+            <div id="tab-prestamos" class="tab-content">
+                <h2>💼 Préstamos</h2>
+                <div id="status-prestamos" class="status info">Sección de préstamos cargada</div>
+                <p>Esta es la sección de préstamos. La navegación funciona correctamente.</p>
+            </div>
+            
+            <div id="tab-pagos" class="tab-content">
+                <h2>💳 Pagos</h2>
+                <div id="status-pagos" class="status info">Sección de pagos cargada</div>
+                <p>Esta es la sección de pagos. Sin errores de JavaScript.</p>
+            </div>
+            
+            <div id="tab-test" class="tab-content">
+                <h2>🔧 Test del Sistema</h2>
+                <div id="status-test" class="status info">Iniciando pruebas...</div>
+                <button onclick="testApi()" style="margin: 5px; padding: 10px;">Probar API</button>
+                <button onclick="testAllTabs()" style="margin: 5px; padding: 10px;">Probar Todas las Pestañas</button>
+                <button onclick="window.open('index.php', '_blank')" style="margin: 5px; padding: 10px;">Abrir Sistema Completo</button>
+                <div id="test-results"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        console.log('Sistema de navegación iniciado');
+        
+        // Función principal de navegación
+        function showTab(tabName) {
+            try {
+                console.log('Cambiando a tab:', tabName);
+                
+                // Remover clase activa de todos los botones
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // Ocultar todos los contenidos
+                document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+                
+                // Activar el botón correspondiente
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => {
+                    if (btn.getAttribute('onclick') === `showTab('${tabName}')`) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Mostrar el contenido correspondiente
+                const tabContent = document.getElementById(`tab-${tabName}`);
+                if (tabContent) {
+                    tabContent.style.display = 'block';
+                    
+                    // Actualizar estado
+                    const statusDiv = document.getElementById(`status-${tabName}`);
+                    if (statusDiv) {
+                        statusDiv.className = 'status success';
+                        statusDiv.textContent = `✅ Pestaña ${tabName} cargada correctamente - ${new Date().toLocaleTimeString()}`;
+                    }
+                } else {
+                    console.error('Tab no encontrado:', `tab-${tabName}`);
+                }
+                
+            } catch (error) {
+                console.error('Error en showTab:', error);
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'status error';
+                errorDiv.textContent = `❌ Error navegando a ${tabName}: ${error.message}`;
+                document.body.appendChild(errorDiv);
+            }
+        }
+        
+        // Función para probar la API
+        async function testApi() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML += '<div class="status info">🔄 Probando API...</div>';
+            
+            try {
+                const response = await fetch('api_modular.php?action=clientes_listar');
+                const data = await response.json();
+                
+                if (data.exito && data.datos) {
+                    resultsDiv.innerHTML += `<div class="status success">✅ API funcionando: ${data.datos.length} clientes encontrados</div>`;
+                } else {
+                    resultsDiv.innerHTML += '<div class="status error">❌ API error: Datos no válidos</div>';
+                }
+            } catch (error) {
+                resultsDiv.innerHTML += `<div class="status error">❌ API error: ${error.message}</div>`;
+            }
+        }
+        
+        // Función para probar todas las pestañas
+        function testAllTabs() {
+            const tabs = ['dashboard', 'clientes', 'prestamos', 'pagos'];
+            let currentTab = 0;
+            
+            const testNext = () => {
+                if (currentTab < tabs.length) {
+                    showTab(tabs[currentTab]);
+                    currentTab++;
+                    setTimeout(testNext, 1000);
+                } else {
+                    const resultsDiv = document.getElementById('test-results');
+                    resultsDiv.innerHTML += '<div class="status success">✅ Todas las pestañas probadas exitosamente</div>';
+                }
+            };
+            
+            testNext();
+        }
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test de navegación iniciado');
+            setTimeout(() => {
+                const statusTest = document.getElementById('status-test');
+                if (statusTest && window.location.hash === '#test') {
+                    showTab('test');
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>

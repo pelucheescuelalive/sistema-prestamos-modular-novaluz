@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug del Sistema</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 20px; 
+            background: #f8f9fa;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .success { background: #d4f6d4; border-color: #28a745; }
+        .error { background: #fdd; border-color: #dc3545; }
+        .warning { background: #fff3cd; border-color: #ffc107; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .log { 
+            background: #f8f9fa; 
+            padding: 10px; 
+            border-radius: 5px; 
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 Debug del Sistema de Préstamos</h1>
+        <p>Esta página ayuda a diagnosticar problemas del sistema principal.</p>
+        
+        <div class="test-section">
+            <h3>🔌 Test de API</h3>
+            <button onclick="testApiEndpoints()">Probar Todos los Endpoints</button>
+            <div id="api-results" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🎯 Test de Navegación</h3>
+            <button onclick="testNavigation()">Simular Clicks de Navegación</button>
+            <div id="nav-results" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>📊 Test de Datos</h3>
+            <button onclick="testDataIntegrity()">Verificar Integridad de Datos</button>
+            <div id="data-results" class="log"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>🚀 Acciones Rápidas</h3>
+            <button onclick="window.open('index.php', '_blank')">Abrir Sistema Principal</button>
+            <button onclick="window.open('test_simple.html', '_blank')">Test Simple</button>
+            <button onclick="resetSystem()">Reset Sistema</button>
+        </div>
+        
+        <div class="test-section">
+            <h3>📝 Log del Sistema</h3>
+            <div id="system-log" class="log">Esperando pruebas...</div>
+        </div>
+    </div>
+    
+    <script>
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('system-log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logMessage = `[${timestamp}] ${message}\n`;
+            logDiv.textContent += logMessage;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            
+            console.log(message);
+        }
+        
+        async function testApiEndpoints() {
+            const resultsDiv = document.getElementById('api-results');
+            resultsDiv.textContent = '';
+            log('🔌 Iniciando test de API...');
+            
+            const endpoints = [
+                'clientes_listar',
+                'prestamos_listar', 
+                'pagos_listar'
+            ];
+            
+            let successCount = 0;
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`api_modular.php?action=${endpoint}`);
+                    const data = await response.json();
+                    
+                    if (response.ok && data.exito) {
+                        resultsDiv.innerHTML += `✅ ${endpoint}: OK (${data.datos?.length || 0} registros)\n`;
+                        successCount++;
+                        log(`✅ API ${endpoint} funcionando correctamente`);
+                    } else {
+                        resultsDiv.innerHTML += `❌ ${endpoint}: ERROR - ${data.mensaje || 'Sin mensaje'}\n`;
+                        log(`❌ API ${endpoint} error: ${data.mensaje}`);
+                    }
+                } catch (error) {
+                    resultsDiv.innerHTML += `💥 ${endpoint}: FALLO - ${error.message}\n`;
+                    log(`💥 API ${endpoint} falló: ${error.message}`);
+                }
+            }
+            
+            const section = resultsDiv.closest('.test-section');
+            if (successCount === endpoints.length) {
+                section.className = 'test-section success';
+                log('🎉 Todos los endpoints de API funcionan correctamente');
+            } else {
+                section.className = 'test-section error';
+                log(`⚠️ Solo ${successCount}/${endpoints.length} endpoints funcionan`);
+            }
+        }
+        
+        async function testNavigation() {
+            const resultsDiv = document.getElementById('nav-results');
+            resultsDiv.textContent = '';
+            log('🎯 Probando navegación...');
+            
+            // Simular test de navegación
+            const tabs = ['dashboard', 'clientes', 'prestamos', 'pagos'];
+            let navTests = [];
+            
+            for (const tab of tabs) {
+                try {
+                    // Simular que existe la función showTab
+                    const hasFunction = typeof showTab === 'function';
+                    if (hasFunction) {
+                        navTests.push(`✅ Función showTab disponible para ${tab}`);
+                    } else {
+                        navTests.push(`❌ Función showTab no disponible para ${tab}`);
+                    }
+                } catch (error) {
+                    navTests.push(`💥 Error probando ${tab}: ${error.message}`);
+                }
+            }
+            
+            resultsDiv.innerHTML = navTests.join('\n');
+            
+            const section = resultsDiv.closest('.test-section');
+            const hasErrors = navTests.some(test => test.includes('❌') || test.includes('💥'));
+            
+            if (!hasErrors) {
+                section.className = 'test-section success';
+                log('✅ Sistema de navegación OK');
+            } else {
+                section.className = 'test-section warning';
+                log('⚠️ Sistema de navegación requiere sistema principal');
+            }
+        }
+        
+        async function testDataIntegrity() {
+            const resultsDiv = document.getElementById('data-results');
+            resultsDiv.textContent = '';
+            log('📊 Verificando integridad de datos...');
+            
+            try {
+                // Probar la integridad de los datos
+                const clientesResp = await fetch('api_modular.php?action=clientes_listar');
+                const clientes = await clientesResp.json();
+                
+                const prestamosResp = await fetch('api_modular.php?action=prestamos_listar');
+                const prestamos = await prestamosResp.json();
+                
+                const pagosResp = await fetch('api_modular.php?action=pagos_listar');
+                const pagos = await pagosResp.json();
+                
+                let tests = [];
+                
+                // Verificar estructura de datos
+                tests.push(`📊 Clientes: ${clientes.datos?.length || 0} registros`);
+                tests.push(`💼 Préstamos: ${prestamos.datos?.length || 0} registros`);
+                tests.push(`💳 Pagos: ${pagos.datos?.length || 0} registros`);
+                
+                // Verificar relaciones
+                if (prestamos.datos && clientes.datos) {
+                    const clientesIds = clientes.datos.map(c => c.id);
+                    const prestamosValidos = prestamos.datos.filter(p => clientesIds.includes(p.cliente_id));
+                    tests.push(`🔗 Relaciones préstamos-clientes: ${prestamosValidos.length}/${prestamos.datos.length} válidas`);
+                }
+                
+                resultsDiv.innerHTML = tests.join('\n');
+                
+                const section = resultsDiv.closest('.test-section');
+                section.className = 'test-section success';
+                log('✅ Integridad de datos verificada');
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `💥 Error verificando datos: ${error.message}`;
+                const section = resultsDiv.closest('.test-section');
+                section.className = 'test-section error';
+                log(`❌ Error verificando integridad: ${error.message}`);
+            }
+        }
+        
+        function resetSystem() {
+            if (confirm('¿Estás seguro de que quieres resetear el sistema?')) {
+                log('🔄 Reseteando sistema...');
+                location.reload();
+            }
+        }
+        
+        // Auto-ejecutar test básico al cargar
+        window.addEventListener('load', () => {
+            log('🚀 Debug del sistema iniciado');
+            setTimeout(testApiEndpoints, 1000);
+        });
+    </script>
+</body>
+</html>

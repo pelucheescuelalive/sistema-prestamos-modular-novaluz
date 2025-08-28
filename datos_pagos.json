@@ -1,0 +1,23 @@
+[
+    {
+        "id": "PAGO001",
+        "prestamo_id": "PREST001",
+        "monto": 5000.00,
+        "fecha": "2025-02-20",
+        "fecha_registro": "2025-02-20 09:00:00"
+    },
+    {
+        "id": "PAGO002",
+        "prestamo_id": "PREST001",
+        "monto": 5000.00,
+        "fecha": "2025-03-20",
+        "fecha_registro": "2025-03-20 09:15:00"
+    },
+    {
+        "id": "PAGO003",
+        "prestamo_id": "PREST002",
+        "monto": 4500.00,
+        "fecha": "2025-03-15",
+        "fecha_registro": "2025-03-15 10:30:00"
+    }
+]
