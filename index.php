@@ -3141,38 +3141,6 @@
             }, 500);
         }
         
-        // ================= MODAL DE CLIENTE =================
-            document.getElementById('cliente-id-edit').value = clienteId;
-            document.getElementById('cliente-nombre').value = cliente.nombre;
-            document.getElementById('cliente-documento').value = cliente.documento;
-            document.getElementById('cliente-telefono').value = cliente.telefono;
-            
-            const emailField = document.getElementById('cliente-email');
-            const direccionField = document.getElementById('cliente-direccion');
-            
-            if (emailField) emailField.value = cliente.email || '';
-            if (direccionField) direccionField.value = cliente.direccion || '';
-            
-            // Calificación
-            const rating = parseInt(cliente.calificacion || 0);
-            actualizarRatingInput(rating);
-            
-            // Foto
-            if (cliente.foto_perfil) {
-                const preview = document.getElementById('preview-foto');
-                if (preview) {
-                    preview.innerHTML = `<img src="${cliente.foto_perfil}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-                }
-            }
-            
-            // Cambiar título y botón
-            const titulo = document.querySelector('#vista-nuevo-cliente h3');
-            const boton = document.querySelector('#form-cliente button[type="submit"]');
-            
-            if (titulo) titulo.textContent = 'Editar Cliente';
-            if (boton) boton.innerHTML = '💾 Actualizar Cliente';
-        }
-        
         async function eliminarCliente() {
             const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
             const menu = document.getElementById('opciones-menu-cliente');

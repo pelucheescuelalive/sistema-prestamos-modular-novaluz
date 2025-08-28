@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Básico - Verificación JavaScript</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .tab-btn { 
+            background: #007bff; 
+            color: white; 
+            border: none; 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer; 
+            border-radius: 5px;
+        }
+        .tab-btn.active { background: #0056b3; }
+        .tab-content { 
+            display: none; 
+            padding: 20px; 
+            border: 1px solid #ddd; 
+            margin-top: 10px; 
+        }
+        .cliente-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 8px;
+            background: white;
+            display: inline-block;
+            width: 300px;
+        }
+        .btn-ver, .btn-opciones {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            margin: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .rating-interactive {
+            cursor: pointer;
+            font-size: 20px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            background: white;
+            margin: 50px auto;
+            padding: 20px;
+            width: 400px;
+            border-radius: 8px;
+        }
+        .opciones-menu {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            display: none;
+        }
+        .opciones-menu.active { display: block; }
+        .opcion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        .opcion-item:hover { background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Básico de JavaScript</h1>
+    
+    <div id="console-log" style="background: #f0f0f0; padding: 15px; margin: 15px 0; border-radius: 5px; font-family: monospace;"></div>
+    
+    <h2>Navegación de Tabs</h2>
+    <div>
+        <button class="tab-btn active" onclick="showTab('dashboard')">📊 Dashboard</button>
+        <button class="tab-btn" onclick="showTab('clientes')">👥 Clientes</button>
+        <button class="tab-btn" onclick="showTab('prestamos')">💼 Préstamos</button>
+    </div>
+    
+    <div id="tab-dashboard" class="tab-content" style="display: block;">
+        <h3>Dashboard</h3>
+        <p>Estadísticas del sistema</p>
+    </div>
+    
+    <div id="tab-clientes" class="tab-content">
+        <h3>Clientes</h3>
+        <div id="clientes-gallery">
+            <div class="cliente-card">
+                <h4>María Elena Rodríguez</h4>
+                <p>809-555-1234</p>
+                <div class="rating-interactive" onclick="mostrarRatingModal('CLI001')">⭐⭐⭐⭐⭐</div>
+                <br>
+                <button class="btn-ver" onclick="abrirModalCliente('CLI001')">👁️ Ver</button>
+                <button class="btn-opciones" onclick="mostrarOpcionesCliente('CLI001', event)">⋮ OPCIONES</button>
+            </div>
+            
+            <div class="cliente-card">
+                <h4>Juan Carlos Méndez</h4>
+                <p>809-555-5678</p>
+                <div class="rating-interactive" onclick="mostrarRatingModal('CLI002')">⭐⭐⭐⭐⭐</div>
+                <br>
+                <button class="btn-ver" onclick="abrirModalCliente('CLI002')">👁️ Ver</button>
+                <button class="btn-opciones" onclick="mostrarOpcionesCliente('CLI002', event)">⋮ OPCIONES</button>
+            </div>
+        </div>
+    </div>
+    
+    <div id="tab-prestamos" class="tab-content">
+        <h3>Préstamos</h3>
+        <p>Lista de préstamos activos</p>
+    </div>
+    
+    <!-- Modal de Cliente -->
+    <div id="modal-cliente" class="modal">
+        <div class="modal-content">
+            <h3>Información del Cliente</h3>
+            <p id="modal-info">Información del cliente aquí</p>
+            <button onclick="cerrarModalCliente()">Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- Modal de Rating -->
+    <div id="modal-rating" class="modal">
+        <div class="modal-content">
+            <h3>Calificar Cliente</h3>
+            <div style="font-size: 30px; text-align: center; margin: 20px 0;">
+                <span onclick="aplicarRating(1)" style="cursor: pointer;">⭐</span>
+                <span onclick="aplicarRating(2)" style="cursor: pointer;">⭐</span>
+                <span onclick="aplicarRating(3)" style="cursor: pointer;">⭐</span>
+                <span onclick="aplicarRating(4)" style="cursor: pointer;">⭐</span>
+                <span onclick="aplicarRating(5)" style="cursor: pointer;">⭐</span>
+            </div>
+            <button onclick="cerrarModalRating()">Cancelar</button>
+        </div>
+    </div>
+    
+    <!-- Menú de Opciones -->
+    <div id="opciones-menu" class="opciones-menu">
+        <div class="opcion-item" onclick="editarCliente()">✏️ Editar Cliente</div>
+        <div class="opcion-item" onclick="verPrestamos()">💼 Ver Préstamos</div>
+        <div class="opcion-item" onclick="crearPrestamo()">➕ Crear Préstamo</div>
+        <div class="opcion-item" onclick="eliminarCliente()">🗑️ Eliminar Cliente</div>
+    </div>
+
+    <script>
+        let currentClienteId = null;
+        
+        function log(message) {
+            console.log(message);
+            const logDiv = document.getElementById('console-log');
+            logDiv.innerHTML += new Date().toLocaleTimeString() + ': ' + message + '<br>';
+        }
+        
+        // Función principal de navegación
+        function showTab(tabName) {
+            try {
+                log('Cambiando a tab: ' + tabName);
+                
+                // Remover clase activa de todos los botones
+                document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                
+                // Ocultar todos los contenidos
+                document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+                
+                // Activar el botón correspondiente
+                const buttons = document.querySelectorAll('.tab-btn');
+                buttons.forEach(btn => {
+                    if (btn.getAttribute('onclick') === `showTab('${tabName}')`) {
+                        btn.classList.add('active');
+                    }
+                });
+                
+                // Mostrar el contenido correspondiente
+                const tabContent = document.getElementById(`tab-${tabName}`);
+                if (tabContent) {
+                    tabContent.style.display = 'block';
+                    log('✅ Tab cambiado correctamente a: ' + tabName);
+                } else {
+                    log('❌ Tab no encontrado: tab-' + tabName);
+                }
+                
+            } catch (error) {
+                log('❌ Error en showTab: ' + error.message);
+            }
+        }
+        
+        // Sistema de calificaciones
+        function mostrarRatingModal(clienteId) {
+            log('⭐ Abriendo modal de rating para: ' + clienteId);
+            currentClienteId = clienteId;
+            document.getElementById('modal-rating').style.display = 'block';
+        }
+        
+        function cerrarModalRating() {
+            log('Cerrando modal de rating');
+            document.getElementById('modal-rating').style.display = 'none';
+            currentClienteId = null;
+        }
+        
+        function aplicarRating(rating) {
+            log('Aplicando rating ' + rating + ' estrellas al cliente ' + currentClienteId);
+            alert('✅ Calificación de ' + rating + ' estrellas aplicada al cliente ' + currentClienteId);
+            cerrarModalRating();
+        }
+        
+        // Modal de cliente
+        function abrirModalCliente(clienteId) {
+            log('👁️ Abriendo modal de cliente: ' + clienteId);
+            currentClienteId = clienteId;
+            document.getElementById('modal-info').textContent = 'Información del cliente ' + clienteId;
+            document.getElementById('modal-cliente').style.display = 'block';
+        }
+        
+        function cerrarModalCliente() {
+            log('Cerrando modal de cliente');
+            document.getElementById('modal-cliente').style.display = 'none';
+            currentClienteId = null;
+        }
+        
+        // Menú de opciones
+        function mostrarOpcionesCliente(clienteId, event) {
+            log('⚙️ Mostrando opciones para cliente: ' + clienteId);
+            currentClienteId = clienteId;
+            
+            const menu = document.getElementById('opciones-menu');
+            const rect = event.target.getBoundingClientRect();
+            
+            menu.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+            menu.style.left = (rect.left + window.scrollX) + 'px';
+            menu.classList.add('active');
+            
+            // Cerrar menú al hacer clic fuera
+            setTimeout(() => {
+                document.addEventListener('click', function closeMenu(e) {
+                    if (!menu.contains(e.target) && !e.target.classList.contains('btn-opciones')) {
+                        menu.classList.remove('active');
+                        document.removeEventListener('click', closeMenu);
+                    }
+                });
+            }, 100);
+        }
+        
+        // Funciones del menú de opciones
+        function editarCliente() {
+            log('✏️ Editando cliente: ' + currentClienteId);
+            document.getElementById('opciones-menu').classList.remove('active');
+            alert('Editando cliente ' + currentClienteId);
+        }
+        
+        function verPrestamos() {
+            log('💼 Viendo préstamos del cliente: ' + currentClienteId);
+            document.getElementById('opciones-menu').classList.remove('active');
+            showTab('prestamos');
+            alert('Préstamos del cliente ' + currentClienteId);
+        }
+        
+        function crearPrestamo() {
+            log('➕ Creando préstamo para cliente: ' + currentClienteId);
+            document.getElementById('opciones-menu').classList.remove('active');
+            showTab('prestamos');
+            alert('Creando préstamo para cliente ' + currentClienteId);
+        }
+        
+        function eliminarCliente() {
+            log('🗑️ Eliminando cliente: ' + currentClienteId);
+            document.getElementById('opciones-menu').classList.remove('active');
+            if (confirm('¿Está seguro de eliminar al cliente ' + currentClienteId + '?')) {
+                alert('Cliente ' + currentClienteId + ' eliminado');
+            }
+        }
+        
+        // Inicialización
+        window.onload = function() {
+            log('🚀 Sistema de test básico inicializado');
+        };
+        
+    </script>
+</body>
+</html>
