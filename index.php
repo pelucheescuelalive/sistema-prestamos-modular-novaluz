@@ -593,7 +593,47 @@
         <div id="tab-prestamos" class="tab-content">
             <h2 class="section-title">💼 Gestión de Préstamos</h2>
             
-            <div class="form-container">
+            <!-- VISTA DE LISTA DE PRÉSTAMOS (Por defecto) -->
+            <div id="vista-lista-prestamos">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Lista de Préstamos</h3>
+                    <button type="button" class="btn btn-success" onclick="mostrarFormularioNuevoPrestamo()">
+                        ➕ Nuevo Préstamo
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Clientes</th>
+                                <th>Referencia</th>
+                                <th>Balance Pendiente</th>
+                                <th>Monto Cuota</th>
+                                <th>Mora</th>
+                                <th>Próximo Pago</th>
+                                <th>Capital Pendiente</th>
+                                <th>Tipo de Préstamo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-prestamos">
+                            <tr><td colspan="9" style="text-align: center; color: #666;">No hay préstamos registrados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- VISTA DE FORMULARIO NUEVO PRÉSTAMO (Oculta por defecto) -->
+            <div id="vista-nuevo-prestamo" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Crear Nuevo Préstamo</h3>
+                    <button type="button" class="btn btn-secondary" onclick="volverAListaPrestamos()">
+                        ← Volver a Lista
+                    </button>
+                </div>
+                
+                <div class="form-container">
                 <h3>Crear Nuevo Préstamo</h3>
                 <form id="form-prestamo">
                     <div class="form-row">
@@ -661,7 +701,7 @@
                     </div>
                     <div style="display: flex; gap: 12px; margin-top: 16px;">
                         <button type="submit" class="btn btn-success">✅ Crear Préstamo</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelarEdicionPrestamo()" id="btn-cancelar-prestamo" style="display: none;">❌ Cancelar</button>
+                        <button type="button" class="btn btn-secondary" onclick="volverAListaPrestamos()">❌ Cancelar</button>
                         <button type="button" class="btn btn-info" onclick="testearPrestamo()">🧪 Probar Sistema</button>
                         <button type="button" class="btn btn-warning" onclick="probarAutocompletado()">⚡ Probar Autocompletado</button>
                     </div>
@@ -703,28 +743,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="table-container">
-                <h3>Lista de Préstamos</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>Clientes</th>
-                            <th>Referencia</th>
-                            <th>Balance Pendiente</th>
-                            <th>Monto Cuota</th>
-                            <th>Mora</th>
-                            <th>Próximo Pago</th>
-                            <th>Capital Pendiente</th>
-                            <th>Tipo de Préstamo</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-prestamos">
-                        <tr><td colspan="9" style="text-align: center; color: #666;">No hay préstamos registrados</td></tr>
-                    </tbody>
-                </table>
+                </div>
             </div>
         </div>
         
@@ -1166,6 +1185,8 @@
                         break;
                     case 'prestamos':
                         cargarPrestamos();
+                        // Asegurar que se muestre la vista de lista por defecto
+                        volverAListaPrestamos();
                         break;
                     case 'pagos':
                         cargarPagos();
@@ -1580,6 +1601,11 @@
                     mostrarResultadoEnModal('✅ Operación Exitosa', 'Préstamo creado correctamente');
                     document.getElementById('form-prestamo').reset();
                     cargarPrestamos();
+                    
+                    // Regresar a la lista de préstamos después de crear exitosamente
+                    setTimeout(() => {
+                        volverAListaPrestamos();
+                    }, 1500); // Esperar 1.5 segundos para que el usuario vea el mensaje
                 } else {
                     mostrarResultadoEnModal('❌ Error', 'Error al crear préstamo: ' + (resultado.error || resultado.message || 'Error desconocido'));
                 }
@@ -1822,6 +1848,44 @@
             }
             
             mostrarResultadoEnModal('ℹ️ Información', 'Edición de préstamo cancelada');
+        }
+        
+        // FUNCIONES PARA MANEJAR VISTAS DE PRÉSTAMOS
+        function mostrarFormularioNuevoPrestamo() {
+            // Ocultar vista de lista
+            document.getElementById('vista-lista-prestamos').style.display = 'none';
+            // Mostrar vista de formulario
+            document.getElementById('vista-nuevo-prestamo').style.display = 'block';
+            
+            // Limpiar formulario por si acaso
+            document.getElementById('form-prestamo').reset();
+            
+            // Establecer fecha de hoy por defecto
+            const fechaInput = document.getElementById('prestamo-fecha');
+            if (fechaInput) {
+                const today = new Date().toISOString().split('T')[0];
+                fechaInput.value = today;
+            }
+            
+            console.log('📝 Mostrando formulario de nuevo préstamo');
+        }
+        
+        function volverAListaPrestamos() {
+            // Mostrar vista de lista
+            document.getElementById('vista-lista-prestamos').style.display = 'block';
+            // Ocultar vista de formulario
+            document.getElementById('vista-nuevo-prestamo').style.display = 'none';
+            
+            // Limpiar formulario
+            document.getElementById('form-prestamo').reset();
+            
+            // Limpiar mensajes
+            const mensajeDiv = document.getElementById('mensaje-prestamo');
+            if (mensajeDiv) {
+                mensajeDiv.innerHTML = '';
+            }
+            
+            console.log('📋 Volviendo a lista de préstamos');
         }
         
         // MÓDULO PAGOS
