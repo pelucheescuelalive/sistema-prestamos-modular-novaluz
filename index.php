@@ -621,8 +621,11 @@
                                 <span id="indicador-plazo-opcional" style="display: none; color: #ff9800; font-size: 0.8em; font-weight: bold;">
                                     📝 Opcional
                                 </span>
+                                <span id="indicador-plazo-auto" style="display: none; color: #4caf50; font-size: 0.8em; font-weight: bold;">
+                                    🧮 Auto-calculado
+                                </span>
                             </label>
-                            <input type="number" class="form-control" id="prestamo-plazo" required oninput="actualizarCalculadoraEnTiempoReal()">
+                            <input type="number" class="form-control" id="prestamo-plazo" required oninput="manejarCambioPlazoManual(); actualizarCalculadoraEnTiempoReal()">
                         </div>
                     </div>
                     <div class="form-row">
@@ -639,7 +642,7 @@
                         </div>
                         <div class="form-group">
                             <label>Frecuencia Pago</label>
-                            <select class="form-control" id="prestamo-frecuencia" onchange="actualizarTasaAutomatica()">
+                            <select class="form-control" id="prestamo-frecuencia" onchange="calcularDiasAutomatico(); actualizarTasaAutomatica()">
                                 <option value="quincenal">Quincenal</option>
                                 <option value="15y30">15 y 30</option>
                                 <option value="mensual">Mensual</option>
@@ -653,7 +656,7 @@
                                     📝 Opcional
                                 </span>
                             </label>
-                            <input type="number" class="form-control" id="prestamo-cuotas" required oninput="actualizarCalculadoraEnTiempoReal()">
+                            <input type="number" class="form-control" id="prestamo-cuotas" required oninput="calcularDiasAutomatico(); actualizarCalculadoraEnTiempoReal()">
                         </div>
                     </div>
                     <div style="display: flex; gap: 12px; margin-top: 16px;">
@@ -2465,6 +2468,113 @@
                 console.log('📊 Modo Cuota Fija: Plazo y cuotas son obligatorios');
                 mostrarMensaje('mensaje-prestamo', '📊 En "Cuota Fija": Los campos Plazo y Cuotas son obligatorios', 'info');
             }
+        }
+        
+        // Función para calcular automáticamente los días basado en cuotas y frecuencia
+        function calcularDiasAutomatico() {
+            const cuotas = parseInt(document.getElementById('prestamo-cuotas').value) || 0;
+            const frecuencia = document.getElementById('prestamo-frecuencia').value;
+            const plazoInput = document.getElementById('prestamo-plazo');
+            const indicadorPlazoAuto = document.getElementById('indicador-plazo-auto');
+            const indicadorPlazoOpcional = document.getElementById('indicador-plazo-opcional');
+            
+            if (cuotas <= 0) {
+                plazoInput.value = '';
+                plazoInput.style.backgroundColor = '';
+                plazoInput.style.border = '';
+                if (indicadorPlazoAuto) indicadorPlazoAuto.style.display = 'none';
+                return;
+            }
+            
+            let diasPorCuota = 0;
+            let nombreFrecuencia = '';
+            
+            // Calcular días según la frecuencia
+            switch (frecuencia) {
+                case 'semanal':
+                    diasPorCuota = 7;
+                    nombreFrecuencia = 'Semanal';
+                    break;
+                case 'quincenal':
+                    diasPorCuota = 15;
+                    nombreFrecuencia = 'Quincenal';
+                    break;
+                case '15y30':
+                    diasPorCuota = 15; // Promedio para 15 y 30
+                    nombreFrecuencia = '15 y 30';
+                    break;
+                case 'mensual':
+                    diasPorCuota = 30;
+                    nombreFrecuencia = 'Mensual';
+                    break;
+                default:
+                    diasPorCuota = 15; // Por defecto quincenal
+                    nombreFrecuencia = 'Quincenal';
+            }
+            
+            const totalDias = cuotas * diasPorCuota;
+            
+            // Actualizar el campo de plazo
+            plazoInput.value = totalDias;
+            
+            // Estilo visual para indicar que es automático
+            plazoInput.style.backgroundColor = '#e8f5e8';
+            plazoInput.style.border = '2px solid #4caf50';
+            
+            // Mostrar indicador de auto-cálculo
+            if (indicadorPlazoAuto) indicadorPlazoAuto.style.display = 'inline';
+            if (indicadorPlazoOpcional) indicadorPlazoOpcional.style.display = 'none';
+            
+            // Mostrar mensaje informativo
+            const mensajeDiv = document.getElementById('mensaje-prestamo');
+            if (mensajeDiv) {
+                mensajeDiv.innerHTML = `
+                    <div style="background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 12px; margin: 10px 0; color: #2e7d32;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2em;">🧮</span>
+                            <strong>Cálculo Automático de Plazo:</strong>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.95em;">
+                            📅 <strong>${cuotas} cuotas ${nombreFrecuencia}</strong> = <strong>${totalDias} días</strong><br>
+                            📊 Cálculo: ${cuotas} cuotas × ${diasPorCuota} días por cuota = ${totalDias} días totales
+                        </div>
+                    </div>
+                `;
+            }
+            
+            console.log(`🧮 Cálculo automático: ${cuotas} cuotas ${nombreFrecuencia} = ${totalDias} días`);
+        }
+        
+        // Función para manejar cuando el usuario edita manualmente el plazo
+        function manejarCambioPlazoManual() {
+            const plazoInput = document.getElementById('prestamo-plazo');
+            const indicadorPlazoAuto = document.getElementById('indicador-plazo-auto');
+            const mensajeDiv = document.getElementById('mensaje-prestamo');
+            
+            // Quitar estilo de auto-cálculo
+            plazoInput.style.backgroundColor = '';
+            plazoInput.style.border = '';
+            
+            // Ocultar indicador de auto-cálculo
+            if (indicadorPlazoAuto) indicadorPlazoAuto.style.display = 'none';
+            
+            // Limpiar mensaje de auto-cálculo
+            if (mensajeDiv && mensajeDiv.innerHTML.includes('Cálculo Automático')) {
+                mensajeDiv.innerHTML = `
+                    <div style="background: #fff3e0; border: 1px solid #ff9800; border-radius: 8px; padding: 12px; margin: 10px 0; color: #f57c00;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2em;">✏️</span>
+                            <strong>Plazo Manual:</strong>
+                        </div>
+                        <div style="margin-top: 8px; font-size: 0.95em;">
+                            📝 Has editado manualmente el plazo. El auto-cálculo se ha deshabilitado.<br>
+                            💡 <em>Tip: Cambia el número de cuotas para reactivar el cálculo automático.</em>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            console.log('✏️ Usuario editó manualmente el plazo - Auto-cálculo deshabilitado');
         }
         
         // Función para actualizar la calculadora en tiempo real
