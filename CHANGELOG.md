@@ -4,6 +4,16 @@
 
 ### 🎉 VERSIONES
 
+#### Versión 1.6.0 (28 de agosto de 2025) - Módulo Clientes Reestructurado 👥
+- 🔄 **MÓDULO INDEPENDIENTE**: Clientes con misma estructura modular que préstamos
+- 📋 **LISTA PRINCIPAL**: Al hacer clic en "Clientes" se muestra directamente la lista
+- ➕ **BOTÓN "NUEVO CLIENTE"**: Acceso directo al formulario de registro
+- 🏠 **FORMULARIO INTEGRADO**: Todo en la misma página, sin ventanas emergentes
+- ← **NAVEGACIÓN FLUIDA**: Botón "Volver a Lista" siempre disponible
+- ✅ **AUTO-REGRESO**: Después de crear cliente exitosamente, regresa a la lista
+- 🧩 **ARQUITECTURA MODULAR**: Cada sección (clientes/préstamos) funciona independientemente
+- 🎯 **CONSISTENCIA**: Misma experiencia de usuario en todos los módulos
+
 #### Versión 1.5.0 (28 de agosto de 2025) - Navegación Mejorada 🚀
 - 🔄 **RESTRUCTURACIÓN COMPLETA**: Nueva navegación en módulo de préstamos
 - 📋 **LISTA PRINCIPAL**: Al hacer clic en "Préstamos" se muestra directamente la lista
@@ -130,5 +140,5 @@ Los siguientes tests están disponibles:
 
 **Desarrollado por**: Sistema Nova Luz Pro  
 **Última revisión**: 28 de agosto de 2025  
-**Versión**: 1.5.0 - Navegación mejorada y UX optimizada
+**Versión**: 1.6.0 - Sistema completamente modular (clientes + préstamos)
 **Repositorio**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
