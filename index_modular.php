@@ -156,7 +156,6 @@
     <!-- CARGAR ESTILOS MODULARES -->
     <link rel="stylesheet" href="modules/cliente.css">
     <link rel="stylesheet" href="modules/rating.css">
-    <link rel="stylesheet" href="modules/formulario-cliente.css">
 </head>
 <body>
     <!-- HEADER -->
@@ -290,7 +289,6 @@
     <script src="modules/navegacion.js"></script>
     <script src="modules/cliente.js"></script>
     <script src="modules/rating.js"></script>
-    <script src="modules/formulario-cliente.js"></script>
     
     <!-- SCRIPT BASE -->
     <script>
