@@ -2654,7 +2654,6 @@
                 console.error('❌ Modal no encontrado');
                 alert('Error: Modal no encontrado');
             }
-            }
         }
         
         // Cerrar modal de cliente
