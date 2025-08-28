@@ -4,6 +4,14 @@
 
 ### 🎉 VERSIONES
 
+#### Versión 1.4.1 (28 de agosto de 2025) - Calculadora Compacta ✨
+- 🎨 **REDISEÑO**: Calculadora con diseño compacto y elegante
+- 📱 **COMPACTA**: Tamaño reducido similar al mensaje de cálculo automático
+- 🎯 **ESTILO MEJORADO**: Misma paleta de colores verde/blanco del auto-cálculo
+- 📊 **INFORMACIÓN CONCISA**: Datos organizados en grid 2x2 compacto
+- ✨ **MÁS LIMPIA**: Eliminó elementos grandes y mantuvo solo lo esencial
+- 🧮 **MISMO RENDIMIENTO**: Cálculos idénticos en formato más elegante
+
 #### Versión 1.4.0 (28 de agosto de 2025) - Cálculo Automático de Días ✨
 - 🧮 **NUEVO**: Cálculo automático de plazo en días basado en cuotas y frecuencia
 - ⚡ **AUTO-CÁLCULO**: Al ingresar número de cuotas, el plazo se calcula automáticamente
@@ -113,5 +121,5 @@ Los siguientes tests están disponibles:
 
 **Desarrollado por**: Sistema Nova Luz Pro  
 **Última revisión**: 28 de agosto de 2025  
-**Versión**: 1.4.0 - Cálculo automático de días implementado
+**Versión**: 1.4.1 - Calculadora compacta y elegante
 **Repositorio**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
