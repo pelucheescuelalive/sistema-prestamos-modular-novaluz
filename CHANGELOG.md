@@ -4,6 +4,15 @@
 
 ### 🎉 VERSIONES
 
+#### Versión 1.5.0 (28 de agosto de 2025) - Navegación Mejorada 🚀
+- 🔄 **RESTRUCTURACIÓN COMPLETA**: Nueva navegación en módulo de préstamos
+- 📋 **LISTA PRINCIPAL**: Al hacer clic en "Préstamos" se muestra directamente la lista
+- ➕ **BOTÓN "NUEVO PRÉSTAMO"**: Acceso claro al formulario de creación
+- 🏠 **FORMULARIO EN PÁGINA**: No usa ventanas emergentes, todo en la misma vista
+- ← **BOTÓN "VOLVER"**: Regresa fácilmente a la lista desde el formulario
+- ✅ **AUTO-REGRESO**: Después de crear un préstamo exitosamente, regresa a la lista
+- 🧭 **NAVEGACIÓN INTUITIVA**: Flujo más natural y fácil de usar
+
 #### Versión 1.4.1 (28 de agosto de 2025) - Calculadora Compacta ✨
 - 🎨 **REDISEÑO**: Calculadora con diseño compacto y elegante
 - 📱 **COMPACTA**: Tamaño reducido similar al mensaje de cálculo automático
@@ -121,5 +130,5 @@ Los siguientes tests están disponibles:
 
 **Desarrollado por**: Sistema Nova Luz Pro  
 **Última revisión**: 28 de agosto de 2025  
-**Versión**: 1.4.1 - Calculadora compacta y elegante
+**Versión**: 1.5.0 - Navegación mejorada y UX optimizada
 **Repositorio**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
