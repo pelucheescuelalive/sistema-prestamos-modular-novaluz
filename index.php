@@ -3356,48 +3356,6 @@
             mostrarMensaje('mensaje-cliente', `Editando cliente: ${cliente.nombre}`, 'info');
         }
         
-        // Función para eliminar cliente
-        async function eliminarCliente(clienteId) {
-            const cliente = clientes.find(c => c.id == clienteId);
-            if (!cliente) {
-                mostrarMensaje('mensaje-cliente', 'Cliente no encontrado', 'error');
-                return;
-            }
-            
-            if (confirm(`¿Estás seguro de que deseas eliminar al cliente "${cliente.nombre}"?\n\nEsta acción no se puede deshacer.`)) {
-                try {
-                    abrirModal();
-                    
-                    const response = await fetch(`api_simple.php?action=cliente_eliminar`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ id: clienteId })
-                    });
-                    
-                    const resultado = await response.json();
-                    cerrarModal();
-                    
-                    if (resultado.success) {
-                        mostrarMensaje('mensaje-cliente', `Cliente "${cliente.nombre}" eliminado correctamente`, 'success');
-                        cargarClientes(); // Recargar la lista
-                        
-                        // Limpiar selección si era el cliente seleccionado
-                        if (clienteSeleccionado && clienteSeleccionado.id == clienteId) {
-                            clienteSeleccionado = null;
-                        }
-                    } else {
-                        mostrarMensaje('mensaje-cliente', 'Error al eliminar cliente: ' + (resultado.message || resultado.error || 'Error desconocido'), 'error');
-                    }
-                } catch (error) {
-                    cerrarModal();
-                    console.error('Error eliminando cliente:', error);
-                    mostrarMensaje('mensaje-cliente', 'Error de conexión al eliminar cliente', 'error');
-                }
-            }
-        }
-        
         // Función para cancelar edición
         function cancelarEdicion() {
             const form = document.getElementById('form-cliente');
