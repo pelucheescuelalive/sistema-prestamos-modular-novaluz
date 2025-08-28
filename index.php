@@ -540,6 +540,43 @@
             color: #666;
         }
         
+        /* Estilos para sistema de calificaciones */
+        .rating-input {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .rating-input .star {
+            cursor: pointer;
+            font-size: 1.5em;
+            color: #ddd;
+            transition: color 0.3s ease;
+            user-select: none;
+        }
+        
+        .rating-input .star:hover,
+        .rating-input .star.active {
+            color: #ffc107;
+        }
+        
+        .rating-input .star.editable {
+            cursor: pointer;
+        }
+        
+        .rating-input .star.editable:hover {
+            color: #ff9800;
+            transform: scale(1.1);
+        }
+        
+        /* Efectos adicionales para estrellas */
+        .rating-input .star {
+            transition: all 0.2s ease;
+        }
+        
+        .rating-input .star:hover ~ .star {
+            color: #ddd !important;
+        }
+        
         .cliente-acciones {
             display: flex;
             gap: 8px;
@@ -2250,18 +2287,191 @@
         // Previsualizar foto antes de subir
         function previsualizarFoto(input) {
             if (input.files && input.files[0]) {
+                const archivo = input.files[0];
+                
+                // Validar tipo de archivo
+                if (!archivo.type.match('image.*')) {
+                    alert('Por favor selecciona solo archivos de imagen');
+                    input.value = '';
+                    return;
+                }
+                
+                // Validar tamaño (máximo 5MB)
+                if (archivo.size > 5 * 1024 * 1024) {
+                    alert('La imagen es demasiado grande. Máximo 5MB');
+                    input.value = '';
+                    return;
+                }
+                
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
-                    const preview = document.getElementById('preview-foto');
-                    if (preview) {
-                        preview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
-                        fotoSeleccionada = input.files[0];
-                    }
+                    // Mostrar modal de recorte
+                    mostrarModalRecorte(e.target.result, archivo);
                 };
                 
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(archivo);
             }
+        }
+        
+        // Modal de recorte de imagen
+        function mostrarModalRecorte(imagenDataUrl, archivo) {
+            const modal = document.createElement('div');
+            modal.id = 'modal-recorte';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 20px; border-radius: 10px; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+                    <h3 style="margin-top: 0;">📷 Ajustar Foto de Perfil</h3>
+                    <p style="color: #666; margin-bottom: 20px;">Haz clic y arrastra para posicionar la imagen como desees</p>
+                    
+                    <div style="width: 300px; height: 300px; border: 2px dashed #ccc; margin: 0 auto 20px auto; overflow: hidden; position: relative; border-radius: 10px;">
+                        <img id="imagen-recorte" src="${imagenDataUrl}" style="
+                            width: 100%;
+                            height: 100%;
+                            object-fit: cover;
+                            cursor: move;
+                            transition: transform 0.1s;
+                        ">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <label style="display: block; margin-bottom: 10px;">Zoom:</label>
+                        <input type="range" id="zoom-slider" min="100" max="300" value="100" style="width: 200px;">
+                        <span id="zoom-value">100%</span>
+                    </div>
+                    
+                    <div style="text-align: center; display: flex; gap: 10px; justify-content: center;">
+                        <button onclick="confirmarRecorte()" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                            ✅ Usar Esta Foto
+                        </button>
+                        <button onclick="cancelarRecorte()" style="background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                            ❌ Cancelar
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Variables para el arrastre
+            let isDragging = false;
+            let startX, startY, currentX = 0, currentY = 0;
+            
+            const imagen = document.getElementById('imagen-recorte');
+            const zoomSlider = document.getElementById('zoom-slider');
+            const zoomValue = document.getElementById('zoom-value');
+            
+            // Event listeners para zoom
+            zoomSlider.addEventListener('input', function() {
+                const zoom = this.value;
+                imagen.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoom/100})`;
+                zoomValue.textContent = zoom + '%';
+            });
+            
+            // Event listeners para arrastre
+            imagen.addEventListener('mousedown', function(e) {
+                isDragging = true;
+                startX = e.clientX - currentX;
+                startY = e.clientY - currentY;
+                imagen.style.cursor = 'grabbing';
+            });
+            
+            document.addEventListener('mousemove', function(e) {
+                if (!isDragging) return;
+                
+                currentX = e.clientX - startX;
+                currentY = e.clientY - startY;
+                
+                const zoom = zoomSlider.value / 100;
+                imagen.style.transform = `translate(${currentX}px, ${currentY}px) scale(${zoom})`;
+            });
+            
+            document.addEventListener('mouseup', function() {
+                if (isDragging) {
+                    isDragging = false;
+                    imagen.style.cursor = 'move';
+                }
+            });
+            
+            // Guardar referencia al archivo original
+            modal.archivoOriginal = archivo;
+        }
+        
+        // Confirmar recorte
+        function confirmarRecorte() {
+            const modal = document.getElementById('modal-recorte');
+            const imagen = document.getElementById('imagen-recorte');
+            
+            // Obtener la imagen procesada como URL de datos
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = 300;
+            canvas.height = 300;
+            
+            // Dibujar la imagen en el canvas con las transformaciones aplicadas
+            const img = new Image();
+            img.onload = function() {
+                // Calcular la transformación
+                const transform = imagen.style.transform;
+                const zoom = document.getElementById('zoom-slider').value / 100;
+                
+                // Aplicar zoom y centrado
+                const scale = zoom;
+                const imgWidth = img.naturalWidth * scale;
+                const imgHeight = img.naturalHeight * scale;
+                
+                // Dibujar imagen centrada y escalada
+                ctx.drawImage(img, 
+                    (canvas.width - imgWidth) / 2, 
+                    (canvas.height - imgHeight) / 2, 
+                    imgWidth, 
+                    imgHeight
+                );
+                
+                // Convertir a blob
+                canvas.toBlob(function(blob) {
+                    // Crear archivo desde blob
+                    const archivoRecortado = new File([blob], 'foto_perfil.jpg', { type: 'image/jpeg' });
+                    
+                    // Mostrar preview en el formulario
+                    canvas.toDataURL('image/jpeg', 0.8);
+                    const preview = document.getElementById('preview-foto');
+                    if (preview) {
+                        preview.innerHTML = `<img src="${canvas.toDataURL('image/jpeg', 0.8)}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                        fotoSeleccionada = archivoRecortado;
+                    }
+                    
+                    // Cerrar modal
+                    document.body.removeChild(modal);
+                }, 'image/jpeg', 0.8);
+            };
+            
+            img.src = imagen.src;
+        }
+        
+        // Cancelar recorte
+        function cancelarRecorte() {
+            const modal = document.getElementById('modal-recorte');
+            const input = document.getElementById('input-foto');
+            
+            // Limpiar input
+            if (input) input.value = '';
+            
+            // Cerrar modal
+            document.body.removeChild(modal);
         }
         
         // Eliminar foto de previsualización
@@ -2341,30 +2551,70 @@
             });
         }
         
+        // Funciones auxiliares para rating en modal
+        function previsualizarRatingModal(rating) {
+            const stars = document.querySelectorAll('#modal-rating-editable .star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
+        function actualizarRatingModal(rating) {
+            const stars = document.querySelectorAll('#modal-rating-editable .star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.style.color = '#ffc107';
+                } else {
+                    star.style.color = '#ddd';
+                }
+            });
+        }
+        
         // ================= MODAL DE CLIENTE =================
         
         // Abrir modal de cliente
         async function abrirModalCliente(clienteId) {
-            const cliente = clientes.find(c => c.id == clienteId);
-            if (!cliente) return;
+            console.log('🔍 Abriendo modal para cliente ID:', clienteId);
             
+            const cliente = clientes.find(c => c.id == clienteId);
+            if (!cliente) {
+                console.error('❌ Cliente no encontrado:', clienteId);
+                alert('Cliente no encontrado');
+                return;
+            }
+            
+            console.log('✅ Cliente encontrado:', cliente);
             clienteModalActual = cliente;
             
             // Llenar información del modal
-            if (document.getElementById('modal-nombre-cliente')) {
-                document.getElementById('modal-nombre-cliente').textContent = cliente.nombre;
+            const nombreElement = document.getElementById('modal-nombre-cliente');
+            if (nombreElement) {
+                nombreElement.textContent = cliente.nombre;
+                console.log('✅ Nombre actualizado');
             }
-            if (document.getElementById('modal-telefono')) {
-                document.getElementById('modal-telefono').textContent = cliente.telefono;
+            
+            const telefonoElement = document.getElementById('modal-telefono');
+            if (telefonoElement) {
+                telefonoElement.textContent = cliente.telefono;
             }
-            if (document.getElementById('modal-telefono2')) {
-                document.getElementById('modal-telefono2').textContent = cliente.telefono;
+            
+            const telefono2Element = document.getElementById('modal-telefono2');
+            if (telefono2Element) {
+                telefono2Element.textContent = cliente.telefono;
             }
-            if (document.getElementById('modal-direccion')) {
-                document.getElementById('modal-direccion').textContent = cliente.direccion || 'No especificada';
+            
+            const direccionElement = document.getElementById('modal-direccion');
+            if (direccionElement) {
+                direccionElement.textContent = cliente.direccion || 'No especificada';
             }
-            if (document.getElementById('modal-email')) {
-                document.getElementById('modal-email').textContent = cliente.email || 'No especificado';
+            
+            const emailElement = document.getElementById('modal-email');
+            if (emailElement) {
+                emailElement.textContent = cliente.email || 'No especificado';
             }
             
             // Foto de perfil
@@ -2375,21 +2625,35 @@
                 } else {
                     modalFoto.innerHTML = '👤';
                 }
+                console.log('✅ Foto actualizada');
             }
             
             // Calificación
             const rating = parseFloat(cliente.calificacion || 0);
-            if (document.getElementById('modal-rating-cliente')) {
-                document.getElementById('modal-rating-cliente').innerHTML = generarEstrellas(rating);
+            const modalRatingElement = document.getElementById('modal-rating-cliente');
+            if (modalRatingElement) {
+                modalRatingElement.innerHTML = generarEstrellas(rating);
             }
-            if (document.getElementById('modal-rating-valor')) {
-                document.getElementById('modal-rating-valor').textContent = rating.toFixed(1);
+            
+            const modalValorElement = document.getElementById('modal-rating-valor');
+            if (modalValorElement) {
+                modalValorElement.textContent = rating.toFixed(1);
             }
+            
+            // Configurar estrellas editables del modal
+            setTimeout(() => {
+                actualizarRatingModal(rating);
+            }, 100);
             
             // Mostrar modal
             const modal = document.getElementById('modal-cliente');
             if (modal) {
                 modal.style.display = 'block';
+                console.log('✅ Modal mostrado');
+            } else {
+                console.error('❌ Modal no encontrado');
+                alert('Error: Modal no encontrado');
+            }
             }
         }
         
@@ -2474,8 +2738,13 @@
         
         // Mostrar menú de opciones
         function mostrarOpcionesCliente(clienteId, event) {
+            console.log('⚙️ Mostrando opciones para cliente:', clienteId);
+            
             const menu = document.getElementById('opciones-menu-cliente');
-            if (!menu) return;
+            if (!menu) {
+                console.error('❌ Menu de opciones no encontrado');
+                return;
+            }
             
             const rect = event.target.getBoundingClientRect();
             
@@ -2483,6 +2752,12 @@
             menu.style.left = rect.left + 'px';
             menu.classList.add('active');
             menu.dataset.clienteId = clienteId;
+            
+            console.log('✅ Menu de opciones mostrado en:', {
+                top: menu.style.top,
+                left: menu.style.left,
+                clienteId: clienteId
+            });
             
             // Cerrar menú al hacer clic fuera
             setTimeout(() => {
@@ -3380,12 +3655,47 @@
         function inicializarSistemaCalificaciones() {
             console.log('Inicializando sistema de calificaciones...');
             
-            // Agregar event listeners a todas las estrellas
+            // Event listeners para estrellas en formulario de creación
             document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('estrella')) {
-                    const calificacion = parseInt(e.target.dataset.calificacion);
-                    const idCliente = e.target.closest('[data-cliente-id]').dataset.clienteId;
-                    actualizarCalificacionCliente(idCliente, calificacion);
+                if (e.target.classList.contains('star') && e.target.closest('#rating-input')) {
+                    const rating = parseInt(e.target.dataset.rating);
+                    actualizarRatingInput(rating);
+                }
+                
+                // Estrellas editables en modal
+                if (e.target.classList.contains('star') && e.target.classList.contains('editable')) {
+                    const rating = parseInt(e.target.dataset.rating);
+                    actualizarCalificacion(rating);
+                }
+            });
+            
+            // Event listeners para hover en formulario
+            document.addEventListener('mouseover', function(e) {
+                if (e.target.classList.contains('star') && e.target.closest('#rating-input')) {
+                    const rating = parseInt(e.target.dataset.rating);
+                    previsualizarRating(rating);
+                }
+                
+                // Hover en estrellas editables del modal
+                if (e.target.classList.contains('star') && e.target.classList.contains('editable')) {
+                    const rating = parseInt(e.target.dataset.rating);
+                    previsualizarRatingModal(rating);
+                }
+            });
+            
+            // Event listeners para salir del hover
+            document.addEventListener('mouseout', function(e) {
+                if (e.target.classList.contains('star') && e.target.closest('#rating-input')) {
+                    const currentRating = parseInt(document.getElementById('cliente-calificacion').value) || 0;
+                    actualizarRatingInput(currentRating);
+                }
+                
+                // Salir de hover en modal
+                if (e.target.classList.contains('star') && e.target.classList.contains('editable')) {
+                    if (clienteModalActual) {
+                        const currentRating = parseFloat(clienteModalActual.calificacion || 0);
+                        actualizarRatingModal(currentRating);
+                    }
                 }
             });
         }
