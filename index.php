@@ -531,61 +531,79 @@
         <div id="tab-clientes" class="tab-content">
             <h2 class="section-title">👥 Gestión de Clientes</h2>
             
-            <div class="form-container">
-                <h3>Registrar Nuevo Cliente</h3>
-                <form id="form-cliente">
-                    <input type="hidden" id="cliente-id-edit" value="">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Nombre Completo</label>
-                            <input type="text" class="form-control" id="cliente-nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Documento</label>
-                            <input type="text" class="form-control" id="cliente-documento" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Teléfono</label>
-                            <input type="text" class="form-control" id="cliente-telefono" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input type="email" class="form-control" id="cliente-email">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label>Dirección</label>
-                            <input type="text" class="form-control" id="cliente-direccion">
-                        </div>
-                    </div>
-                    <div style="display: flex; gap: 12px; margin-top: 16px;">
-                        <button type="submit" class="btn btn-success">✅ Crear Cliente</button>
-                        <button type="button" class="btn btn-info" onclick="testearCliente()">🧪 Probar Sistema</button>
-                        <button type="button" class="btn btn-secondary" onclick="cancelarEdicion()" id="btn-cancelar" style="display: none;">❌ Cancelar</button>
-                    </div>
-                </form>
-                <div id="mensaje-cliente"></div>
+            <!-- VISTA DE LISTA DE CLIENTES (Por defecto) -->
+            <div id="vista-lista-clientes">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Lista de Clientes</h3>
+                    <button type="button" class="btn btn-success" onclick="mostrarFormularioNuevoCliente()">
+                        ➕ Nuevo Cliente
+                    </button>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Documento</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-clientes">
+                            <tr><td colspan="7" style="text-align: center; color: #666;">No hay clientes registrados</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
-            <div class="table-container">
-                <h3>Lista de Clientes</h3>
-                <table class="data-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nombre</th>
-                            <th>Documento</th>
-                            <th>Teléfono</th>
-                            <th>Email</th>
-                            <th>Fecha Registro</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="lista-clientes">
-                        <tr><td colspan="7" style="text-align: center; color: #666;">No hay clientes registrados</td></tr>
-                    </tbody>
-                </table>
+            <!-- VISTA DE FORMULARIO NUEVO CLIENTE (Oculta por defecto) -->
+            <div id="vista-nuevo-cliente" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>Registrar Nuevo Cliente</h3>
+                    <button type="button" class="btn btn-secondary" onclick="volverAListaClientes()">
+                        ← Volver a Lista
+                    </button>
+                </div>
+                
+                <div class="form-container">
+                    <form id="form-cliente">
+                        <input type="hidden" id="cliente-id-edit" value="">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nombre Completo</label>
+                                <input type="text" class="form-control" id="cliente-nombre" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Documento</label>
+                                <input type="text" class="form-control" id="cliente-documento" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono</label>
+                                <input type="text" class="form-control" id="cliente-telefono" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" id="cliente-email">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Dirección</label>
+                                <input type="text" class="form-control" id="cliente-direccion">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 12px; margin-top: 16px;">
+                            <button type="submit" class="btn btn-success">✅ Crear Cliente</button>
+                            <button type="button" class="btn btn-secondary" onclick="volverAListaClientes()">❌ Cancelar</button>
+                            <button type="button" class="btn btn-info" onclick="testearCliente()">🧪 Probar Sistema</button>
+                        </div>
+                    </form>
+                    <div id="mensaje-cliente"></div>
+                </div>
             </div>
         </div>
         
@@ -1182,6 +1200,8 @@
                         break;
                     case 'clientes':
                         cargarClientes();
+                        // Asegurar que se muestre la vista de lista por defecto
+                        volverAListaClientes();
                         break;
                     case 'prestamos':
                         cargarPrestamos();
@@ -1346,6 +1366,11 @@
                     mostrarMensaje('mensaje-cliente', 'Cliente creado correctamente');
                     document.getElementById('form-cliente').reset();
                     cargarClientes();
+                    
+                    // Regresar a la lista de clientes después de crear exitosamente
+                    setTimeout(() => {
+                        volverAListaClientes();
+                    }, 1500); // Esperar 1.5 segundos para que el usuario vea el mensaje
                 } else {
                     mostrarMensaje('mensaje-cliente', 'Error al crear cliente: ' + (resultado.message || resultado.error || 'Error desconocido'), 'error');
                 }
@@ -1379,6 +1404,52 @@
                 
                 console.log('Edición cancelada');
             }
+        }
+        
+        // FUNCIONES PARA MANEJAR VISTAS DE CLIENTES (MÓDULO INDEPENDIENTE)
+        function mostrarFormularioNuevoCliente() {
+            // Ocultar vista de lista
+            document.getElementById('vista-lista-clientes').style.display = 'none';
+            // Mostrar vista de formulario
+            document.getElementById('vista-nuevo-cliente').style.display = 'block';
+            
+            // Limpiar formulario por si acaso
+            document.getElementById('form-cliente').reset();
+            
+            // Resetear modo edición si estaba activo
+            editandoCliente = null;
+            clienteIdEditar = null;
+            
+            // Asegurar que el botón esté en modo "Crear"
+            const submitBtn = document.querySelector('#vista-nuevo-cliente button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.innerHTML = '✅ Crear Cliente';
+                submitBtn.style.backgroundColor = '';
+            }
+            
+            console.log('📝 Mostrando formulario de nuevo cliente');
+        }
+        
+        function volverAListaClientes() {
+            // Mostrar vista de lista
+            document.getElementById('vista-lista-clientes').style.display = 'block';
+            // Ocultar vista de formulario
+            document.getElementById('vista-nuevo-cliente').style.display = 'none';
+            
+            // Limpiar formulario
+            document.getElementById('form-cliente').reset();
+            
+            // Limpiar mensajes
+            const mensajeDiv = document.getElementById('mensaje-cliente');
+            if (mensajeDiv) {
+                mensajeDiv.innerHTML = '';
+            }
+            
+            // Resetear variables de edición
+            editandoCliente = null;
+            clienteIdEditar = null;
+            
+            console.log('📋 Volviendo a lista de clientes');
         }
         
         async function cargarClientes() {
