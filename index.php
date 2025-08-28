@@ -157,6 +157,7 @@
     <link rel="stylesheet" href="modules/cliente.css">
     <link rel="stylesheet" href="modules/rating.css">
     <link rel="stylesheet" href="modules/formulario-cliente.css">
+    <link rel="stylesheet" href="modules/prestamos.css">
 </head>
 <body>
     <!-- HEADER -->
@@ -238,8 +239,14 @@
 
         <!-- VISTA PRÉSTAMOS -->
         <div id="vista-prestamos" class="vista">
-            <h2>💼 Gestión de Préstamos</h2>
-            <div id="prestamos-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2>💼 Gestión de Préstamos</h2>
+                <button class="btn btn-primary" onclick="showTab('nuevo-prestamo')">
+                    ➕ Nuevo Préstamo
+                </button>
+            </div>
+            <div id="filtro-mensaje"></div>
+            <div id="prestamos-tabla">
                 <div class="loading">🔄 Cargando préstamos...</div>
             </div>
         </div>
@@ -291,6 +298,7 @@
     <script src="modules/cliente.js"></script>
     <script src="modules/rating.js"></script>
     <script src="modules/formulario-cliente.js"></script>
+    <script src="modules/prestamos.js"></script>
     
     <!-- SCRIPT BASE -->
     <script>
