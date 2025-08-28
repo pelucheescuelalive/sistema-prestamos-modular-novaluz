@@ -4,6 +4,14 @@
 
 ### 🎉 VERSIONES
 
+#### Versión 1.3.0 (28 de agosto de 2025) - GitHub Conectado ✅
+- 🌐 **CONECTADO**: Repositorio GitHub configurado exitosamente
+- 🔗 **URL**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
+- ✅ **Push inicial**: 70 objetos subidos correctamente
+- 🚀 **Scripts activos**: Sistema de guardado automático funcionando
+- 📁 **Configuración**: Archivo GITHUB_CONFIG.txt creado
+- 🎯 **Estado**: Listo para desarrollo continuo con respaldo automático
+
 #### Versión 1.2.0 (28 de agosto de 2025) - Git Manager Pro
 - 🚀 **NUEVO**: Git Manager Pro - Sistema de guardado automático
 - ✨ **Agregado**: Scripts para commit y push automático a GitHub
@@ -93,4 +101,5 @@ Los siguientes tests están disponibles:
 
 **Desarrollado por**: Sistema Nova Luz Pro  
 **Última revisión**: 28 de agosto de 2025  
-**Versión**: 1.1.0 - Error "desconocido" solucionado
+**Versión**: 1.3.0 - GitHub conectado y funcional
+**Repositorio**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
