@@ -690,13 +690,16 @@
                     </div>
                 </div>
                 
-                <!-- CALCULADORA INTELIGENTE EN TIEMPO REAL -->
-                <div class="calculadora-container" style="margin-top: 20px; padding: 20px; background: linear-gradient(135deg, #e3f2fd 0%, #f1f8e9 100%); border-radius: 12px; border: 2px solid #2196f3;">
-                    <h3 style="color: #1976d2; margin-bottom: 15px;">🧮 Calculadora de Préstamos</h3>
+                <!-- CALCULADORA COMPACTA Y ELEGANTE -->
+                <div class="calculadora-container" style="margin-top: 15px; padding: 12px; background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; color: #2e7d32;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">
+                        <span style="font-size: 1.1em;">🧮</span>
+                        <strong style="font-size: 0.95em;">Calculadora de Préstamos</strong>
+                    </div>
                     
-                    <div class="calculo-resultado" id="resultado-calculo" style="background: white; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                        <div style="text-align: center; color: #666; font-style: italic;">
-                            Completa los campos del préstamo para ver los cálculos automáticos...
+                    <div class="calculo-resultado" id="resultado-calculo" style="background: rgba(255,255,255,0.7); padding: 10px; border-radius: 6px; font-size: 0.9em;">
+                        <div style="text-align: center; color: #666; font-style: italic; font-size: 0.85em;">
+                            📊 Completa los campos para ver los cálculos automáticos...
                         </div>
                     </div>
                 </div>
@@ -2590,9 +2593,8 @@
             // Si faltan datos, mostrar mensaje de espera
             if (monto <= 0 || tasa <= 0 || cuotas <= 0) {
                 resultadoDiv.innerHTML = `
-                    <div style="text-align: center; color: #666; font-style: italic; padding: 20px;">
-                        <div style="font-size: 48px; margin-bottom: 10px;">🧮</div>
-                        <p>Completa los campos del préstamo para ver los cálculos automáticos...</p>
+                    <div style="text-align: center; color: #666; font-style: italic; font-size: 0.85em;">
+                        📊 Completa los campos para ver los cálculos automáticos...
                     </div>
                 `;
                 return;
@@ -2607,30 +2609,23 @@
                 const totalAPagar = monto + totalIntereses;
                 
                 html = `
-                    <div style="border-left: 4px solid #e53935; padding-left: 15px;">
-                        <h4 style="color: #c62828; margin-bottom: 15px;">
-                            🔴 Solo Interés - Frecuencia ${frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1)}
-                        </h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1.1em;">
-                            <div style="background: #e8f5e8; padding: 12px; border-radius: 6px;">
-                                <strong>💰 Capital:</strong><br>
-                                RD$${number_format(monto, 2)}
-                            </div>
-                            <div style="background: #fff3e0; padding: 12px; border-radius: 6px;">
-                                <strong>📈 Interés total:</strong><br>
-                                RD$${number_format(totalIntereses, 2)}
-                            </div>
-                            <div style="background: #f3e5f5; padding: 12px; border-radius: 6px;">
-                                <strong>⭐ Pago por período:</strong><br>
-                                RD$${number_format(interesPorPeriodo, 2)}
-                            </div>
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 6px;">
-                                <strong>💵 Total a pagar:</strong><br>
-                                RD$${number_format(totalAPagar, 2)}
-                            </div>
+                    <div style="border-left: 3px solid #e53935; padding-left: 8px;">
+                        <div style="font-weight: bold; color: #c62828; margin-bottom: 8px; font-size: 0.9em;">
+                            🔴 Solo Interés - ${frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1)}
                         </div>
-                        <div style="margin-top: 15px; padding: 10px; background: #fff8e1; border-radius: 6px; border-left: 3px solid #ffc107;">
-                            <small><strong>📝 Nota:</strong> Cada pago cubre solo intereses. Pagos adicionales reducen el capital.</small>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em;">
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #4caf50;">
+                                <strong>💰 Capital:</strong> RD$${number_format(monto, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #ff9800;">
+                                <strong>📈 Interés total:</strong> RD$${number_format(totalIntereses, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #9c27b0;">
+                                <strong>⭐ Pago c/período:</strong> RD$${number_format(interesPorPeriodo, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #2196f3;">
+                                <strong>💵 Total a pagar:</strong> RD$${number_format(totalAPagar, 2)}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -2644,30 +2639,23 @@
                 const montoTotal = monto + totalIntereses;
                 
                 html = `
-                    <div style="border-left: 4px solid #2196f3; padding-left: 15px;">
-                        <h4 style="color: #1976d2; margin-bottom: 15px;">
-                            📊 Cuota Fija - Frecuencia ${frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1)}
-                        </h4>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 1.1em;">
-                            <div style="background: #e8f5e8; padding: 12px; border-radius: 6px;">
-                                <strong>💰 Capital:</strong><br>
-                                RD$${number_format(monto, 2)}
-                            </div>
-                            <div style="background: #fff3e0; padding: 12px; border-radius: 6px;">
-                                <strong>📈 Interés total:</strong><br>
-                                RD$${number_format(totalIntereses, 2)}
-                            </div>
-                            <div style="background: #f3e5f5; padding: 12px; border-radius: 6px;">
-                                <strong>⭐ Cuota fija:</strong><br>
-                                RD$${number_format(cuotaFija, 2)}
-                            </div>
-                            <div style="background: #e3f2fd; padding: 12px; border-radius: 6px;">
-                                <strong>💵 Total a pagar:</strong><br>
-                                RD$${number_format(montoTotal, 2)}
-                            </div>
+                    <div style="border-left: 3px solid #2196f3; padding-left: 8px;">
+                        <div style="font-weight: bold; color: #1976d2; margin-bottom: 8px; font-size: 0.9em;">
+                            📊 Cuota Fija - ${frecuencia.charAt(0).toUpperCase() + frecuencia.slice(1)}
                         </div>
-                        <div style="margin-top: 15px; padding: 10px; background: #e8f5e8; border-radius: 6px; border-left: 3px solid #4caf50;">
-                            <small><strong>📝 Fórmula:</strong> M = P/n + (P·r) = RD$${number_format(capitalPorCuota, 2)} + RD$${number_format(interesFijoPorCuota, 2)} = RD$${number_format(cuotaFija, 2)}</small>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 0.85em;">
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #4caf50;">
+                                <strong>💰 Capital:</strong> RD$${number_format(monto, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #ff9800;">
+                                <strong>📈 Interés total:</strong> RD$${number_format(totalIntereses, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #9c27b0;">
+                                <strong>⭐ Cuota fija:</strong> RD$${number_format(cuotaFija, 2)}
+                            </div>
+                            <div style="background: rgba(255,255,255,0.8); padding: 6px; border-radius: 4px; border-left: 2px solid #2196f3;">
+                                <strong>💵 Total a pagar:</strong> RD$${number_format(montoTotal, 2)}
+                            </div>
                         </div>
                     </div>
                 `;
