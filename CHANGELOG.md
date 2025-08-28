@@ -4,6 +4,18 @@
 
 ### 🎉 VERSIONES
 
+#### Versión 1.4.0 (28 de agosto de 2025) - Cálculo Automático de Días ✨
+- 🧮 **NUEVO**: Cálculo automático de plazo en días basado en cuotas y frecuencia
+- ⚡ **AUTO-CÁLCULO**: Al ingresar número de cuotas, el plazo se calcula automáticamente
+- 📅 **FRECUENCIAS SOPORTADAS**:
+  - Semanal: 7 días por cuota
+  - Quincenal: 15 días por cuota  
+  - Mensual: 30 días por cuota
+  - 15 y 30: 15 días por cuota (promedio)
+- 🎯 **INTELIGENTE**: Indicador visual cuando el plazo es auto-calculado
+- ✏️ **FLEXIBLE**: Permite edición manual del plazo (desactiva auto-cálculo)
+- 📊 **EJEMPLO**: 37 cuotas mensuales = 1,110 días automáticamente
+
 #### Versión 1.3.0 (28 de agosto de 2025) - GitHub Conectado ✅
 - 🌐 **CONECTADO**: Repositorio GitHub configurado exitosamente
 - 🔗 **URL**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
@@ -101,5 +113,5 @@ Los siguientes tests están disponibles:
 
 **Desarrollado por**: Sistema Nova Luz Pro  
 **Última revisión**: 28 de agosto de 2025  
-**Versión**: 1.3.0 - GitHub conectado y funcional
+**Versión**: 1.4.0 - Cálculo automático de días implementado
 **Repositorio**: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz
