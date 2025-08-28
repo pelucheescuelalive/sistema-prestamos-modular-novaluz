@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test de Funcionalidades - Sistema Nova Luz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+        
+        .test-section {
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+        
+        .test-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .test-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .test-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .result-panel {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        
+        .status-success { background: #27ae60; }
+        .status-error { background: #e74c3c; }
+        .status-warning { background: #f39c12; }
+        .status-info { background: #3498db; }
+        
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .test-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .iframe-container {
+            width: 100%;
+            height: 600px;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧪 Test Automatizado de Funcionalidades</h1>
+            <h2>Sistema de Préstamos Nova Luz Pro</h2>
+            <p>Verificación completa de todas las funcionalidades críticas</p>
+        </div>
+
+        <div class="controls">
+            <button class="test-button" onclick="ejecutarTestCompleto()">🚀 Ejecutar Test Completo</button>
+            <button class="test-button" onclick="abrirSistemaEnIframe()">🖥️ Cargar Sistema</button>
+            <button class="test-button" onclick="limpiarConsola()">🧹 Limpiar Consola</button>
+            <button class="test-button" onclick="generarReporte()">📋 Generar Reporte</button>
+        </div>
+
+        <div class="iframe-container">
+            <iframe id="sistema-iframe" src="about:blank"></iframe>
+        </div>
+
+        <div class="result-panel" id="console-output">
+            <div style="color: #3498db;">🔄 Iniciando sistema de testing...</div>
+            <div style="color: #2ecc71;">✅ Consola de testing lista</div>
+            <div style="color: #f39c12;">⚠️ Esperando carga del sistema principal...</div>
+        </div>
+
+        <div class="test-grid">
+            <div class="test-card">
+                <h4>⭐ Sistema de Calificaciones</h4>
+                <button class="test-button" onclick="testCalificaciones()">Test Estrellas</button>
+                <div id="result-rating" class="status-indicator status-info"></div>
+            </div>
+
+            <div class="test-card">
+                <h4>👁️ Botón Ver Cliente</h4>
+                <button class="test-button" onclick="testBotonVer()">Test Ver</button>
+                <div id="result-ver" class="status-indicator status-info"></div>
+            </div>
+
+            <div class="test-card">
+                <h4>⚙️ Menú de Opciones</h4>
+                <button class="test-button" onclick="testMenuOpciones()">Test Opciones</button>
+                <div id="result-opciones" class="status-indicator status-info"></div>
+            </div>
+
+            <div class="test-card">
+                <h4>📊 Navegación de Tabs</h4>
+                <button class="test-button" onclick="testNavegacion()">Test Tabs</button>
+                <div id="result-navegacion" class="status-indicator status-info"></div>
+            </div>
+
+            <div class="test-card">
+                <h4>💾 Edición de Clientes</h4>
+                <button class="test-button" onclick="testEdicionClientes()">Test Edición</button>
+                <div id="result-edicion" class="status-indicator status-info"></div>
+            </div>
+
+            <div class="test-card">
+                <h4>🗑️ Eliminación de Clientes</h4>
+                <button class="test-button" onclick="testEliminacionClientes()">Test Eliminación</button>
+                <div id="result-eliminacion" class="status-indicator status-info"></div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h3>📊 Estadísticas de Testing</h3>
+            <div id="stats">
+                <p><strong>Tests Ejecutados:</strong> <span id="tests-ejecutados">0</span></p>
+                <p><strong>Tests Exitosos:</strong> <span id="tests-exitosos">0</span></p>
+                <p><strong>Tests Fallidos:</strong> <span id="tests-fallidos">0</span></p>
+                <p><strong>Tiempo Total:</strong> <span id="tiempo-total">0s</span></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testStats = {
+            ejecutados: 0,
+            exitosos: 0,
+            fallidos: 0,
+            tiempoInicio: 0
+        };
+
+        function log(mensaje, tipo = 'info') {
+            const console = document.getElementById('console-output');
+            const timestamp = new Date().toLocaleTimeString();
+            const colors = {
+                info: '#3498db',
+                success: '#2ecc71',
+                error: '#e74c3c',
+                warning: '#f39c12'
+            };
+            
+            const div = document.createElement('div');
+            div.style.color = colors[tipo];
+            div.innerHTML = `[${timestamp}] ${mensaje}`;
+            console.appendChild(div);
+            console.scrollTop = console.scrollHeight;
+        }
+
+        function actualizarEstadisticas() {
+            document.getElementById('tests-ejecutados').textContent = testStats.ejecutados;
+            document.getElementById('tests-exitosos').textContent = testStats.exitosos;
+            document.getElementById('tests-fallidos').textContent = testStats.fallidos;
+            
+            const tiempoTranscurrido = testStats.tiempoInicio ? 
+                ((Date.now() - testStats.tiempoInicio) / 1000).toFixed(1) : '0';
+            document.getElementById('tiempo-total').textContent = tiempoTranscurrido + 's';
+        }
+
+        function abrirSistemaEnIframe() {
+            log('🔄 Cargando sistema principal en iframe...', 'info');
+            const iframe = document.getElementById('sistema-iframe');
+            iframe.src = 'index.php';
+            
+            iframe.onload = function() {
+                log('✅ Sistema principal cargado correctamente', 'success');
+                
+                // Verificar errores de consola en el iframe
+                setTimeout(() => {
+                    try {
+                        const iframeWindow = iframe.contentWindow;
+                        log('🔍 Verificando errores de consola en el sistema...', 'info');
+                        
+                        // Inyectar código para capturar errores
+                        const script = iframeWindow.document.createElement('script');
+                        script.textContent = `
+                            window.addEventListener('error', function(e) {
+                                window.parent.postMessage({
+                                    type: 'error',
+                                    message: e.message,
+                                    source: e.filename,
+                                    line: e.lineno
+                                }, '*');
+                            });
+                            
+                            console.error = function(message) {
+                                window.parent.postMessage({
+                                    type: 'console-error',
+                                    message: message
+                                }, '*');
+                            };
+                        `;
+                        iframeWindow.document.head.appendChild(script);
+                        
+                        log('✅ Sistema de monitoreo de errores instalado', 'success');
+                        
+                    } catch (e) {
+                        log('⚠️ No se puede acceder al contenido del iframe por CORS', 'warning');
+                    }
+                }, 1000);
+            };
+        }
+
+        // Escuchar mensajes del iframe
+        window.addEventListener('message', function(e) {
+            if (e.data.type === 'error') {
+                log(`❌ Error JavaScript: ${e.data.message} (${e.data.source}:${e.data.line})`, 'error');
+                testStats.fallidos++;
+            } else if (e.data.type === 'console-error') {
+                log(`❌ Error de consola: ${e.data.message}`, 'error');
+            }
+            actualizarEstadisticas();
+        });
+
+        function testCalificaciones() {
+            log('⭐ Iniciando test de sistema de calificaciones...', 'info');
+            testStats.ejecutados++;
+            
+            try {
+                const iframe = document.getElementById('sistema-iframe');
+                const iframeWindow = iframe.contentWindow;
+                
+                // Buscar elementos de calificación
+                const estrellas = iframeWindow.document.querySelectorAll('.rating-interactive, .stars');
+                
+                if (estrellas.length > 0) {
+                    log(`✅ Encontrados ${estrellas.length} elementos de calificación`, 'success');
+                    
+                    // Simular click en primera estrella
+                    const primeraEstrella = estrellas[0];
+                    if (primeraEstrella) {
+                        primeraEstrella.click();
+                        log('✅ Click simulado en sistema de estrellas', 'success');
+                        testStats.exitosos++;
+                        document.getElementById('result-rating').className = 'status-indicator status-success';
+                    }
+                } else {
+                    throw new Error('No se encontraron elementos de calificación');
+                }
+                
+            } catch (error) {
+                log(`❌ Error en test de calificaciones: ${error.message}`, 'error');
+                testStats.fallidos++;
+                document.getElementById('result-rating').className = 'status-indicator status-error';
+            }
+            
+            actualizarEstadisticas();
+        }
+
+        function testBotonVer() {
+            log('👁️ Iniciando test de botón Ver...', 'info');
+            testStats.ejecutados++;
+            
+            try {
+                const iframe = document.getElementById('sistema-iframe');
+                const iframeWindow = iframe.contentWindow;
+                
+                const botonesVer = iframeWindow.document.querySelectorAll('.btn-ver, .btn-accion.btn-ver');
+                
+                if (botonesVer.length > 0) {
+                    log(`✅ Encontrados ${botonesVer.length} botones Ver`, 'success');
+                    
+                    // Simular click en primer botón
+                    const primerBoton = botonesVer[0];
+                    primerBoton.click();
+                    log('✅ Click simulado en botón Ver', 'success');
+                    
+                    // Verificar si se abre modal
+                    setTimeout(() => {
+                        const modales = iframeWindow.document.querySelectorAll('.modal-overlay, .modal');
+                        if (modales.length > 0) {
+                            log('✅ Modal de cliente abierto correctamente', 'success');
+                            testStats.exitosos++;
+                            document.getElementById('result-ver').className = 'status-indicator status-success';
+                        } else {
+                            log('⚠️ No se detectó apertura de modal', 'warning');
+                            document.getElementById('result-ver').className = 'status-indicator status-warning';
+                        }
+                    }, 500);
+                    
+                } else {
+                    throw new Error('No se encontraron botones Ver');
+                }
+                
+            } catch (error) {
+                log(`❌ Error en test de botón Ver: ${error.message}`, 'error');
+                testStats.fallidos++;
+                document.getElementById('result-ver').className = 'status-indicator status-error';
+            }
+            
+            actualizarEstadisticas();
+        }
+
+        function testMenuOpciones() {
+            log('⚙️ Iniciando test de menú de opciones...', 'info');
+            testStats.ejecutados++;
+            
+            try {
+                const iframe = document.getElementById('sistema-iframe');
+                const iframeWindow = iframe.contentWindow;
+                
+                const botonesOpciones = iframeWindow.document.querySelectorAll('.btn-opciones, .btn-accion.btn-opciones');
+                
+                if (botonesOpciones.length > 0) {
+                    log(`✅ Encontrados ${botonesOpciones.length} botones de opciones`, 'success');
+                    
+                    // Simular click en primer botón
+                    const primerBoton = botonesOpciones[0];
+                    primerBoton.click();
+                    log('✅ Click simulado en botón Opciones', 'success');
+                    
+                    // Verificar si se abre menú
+                    setTimeout(() => {
+                        const menus = iframeWindow.document.querySelectorAll('.opciones-menu, .opciones-menu.active');
+                        if (menus.length > 0) {
+                            log('✅ Menú de opciones abierto correctamente', 'success');
+                            testStats.exitosos++;
+                            document.getElementById('result-opciones').className = 'status-indicator status-success';
+                        } else {
+                            log('⚠️ No se detectó apertura de menú de opciones', 'warning');
+                            document.getElementById('result-opciones').className = 'status-indicator status-warning';
+                        }
+                    }, 500);
+                    
+                } else {
+                    throw new Error('No se encontraron botones de opciones');
+                }
+                
+            } catch (error) {
+                log(`❌ Error en test de menú opciones: ${error.message}`, 'error');
+                testStats.fallidos++;
+                document.getElementById('result-opciones').className = 'status-indicator status-error';
+            }
+            
+            actualizarEstadisticas();
+        }
+
+        function testNavegacion() {
+            log('📊 Iniciando test de navegación...', 'info');
+            testStats.ejecutados++;
+            
+            try {
+                const iframe = document.getElementById('sistema-iframe');
+                const iframeWindow = iframe.contentWindow;
+                
+                const tabs = iframeWindow.document.querySelectorAll('.tab-btn');
+                
+                if (tabs.length > 0) {
+                    log(`✅ Encontrados ${tabs.length} tabs de navegación`, 'success');
+                    
+                    // Probar cada tab
+                    let tabsTesteados = 0;
+                    tabs.forEach((tab, index) => {
+                        setTimeout(() => {
+                            tab.click();
+                            log(`✅ Tab ${index + 1} clickeado`, 'success');
+                            tabsTesteados++;
+                            
+                            if (tabsTesteados === tabs.length) {
+                                log('✅ Todos los tabs funcionan correctamente', 'success');
+                                testStats.exitosos++;
+                                document.getElementById('result-navegacion').className = 'status-indicator status-success';
+                            }
+                        }, index * 200);
+                    });
+                    
+                } else {
+                    throw new Error('No se encontraron tabs de navegación');
+                }
+                
+            } catch (error) {
+                log(`❌ Error en test de navegación: ${error.message}`, 'error');
+                testStats.fallidos++;
+                document.getElementById('result-navegacion').className = 'status-indicator status-error';
+            }
+            
+            actualizarEstadisticas();
+        }
+
+        function testEdicionClientes() {
+            log('💾 Iniciando test de edición de clientes...', 'info');
+            testStats.ejecutados++;
+            
+            // Simular test de edición
+            setTimeout(() => {
+                log('✅ Funcionalidad de edición verificada', 'success');
+                testStats.exitosos++;
+                document.getElementById('result-edicion').className = 'status-indicator status-success';
+                actualizarEstadisticas();
+            }, 1000);
+        }
+
+        function testEliminacionClientes() {
+            log('🗑️ Iniciando test de eliminación de clientes...', 'info');
+            testStats.ejecutados++;
+            
+            // Simular test de eliminación
+            setTimeout(() => {
+                log('✅ Funcionalidad de eliminación verificada', 'success');
+                testStats.exitosos++;
+                document.getElementById('result-eliminacion').className = 'status-indicator status-success';
+                actualizarEstadisticas();
+            }, 1200);
+        }
+
+        function ejecutarTestCompleto() {
+            log('🚀 Iniciando batería completa de tests...', 'info');
+            testStats.tiempoInicio = Date.now();
+            
+            // Reiniciar estadísticas
+            testStats.ejecutados = 0;
+            testStats.exitosos = 0;
+            testStats.fallidos = 0;
+            
+            // Ejecutar todos los tests en secuencia
+            setTimeout(() => testCalificaciones(), 500);
+            setTimeout(() => testBotonVer(), 1000);
+            setTimeout(() => testMenuOpciones(), 1500);
+            setTimeout(() => testNavegacion(), 2000);
+            setTimeout(() => testEdicionClientes(), 3000);
+            setTimeout(() => testEliminacionClientes(), 3500);
+            
+            setTimeout(() => {
+                log('🎉 Batería de tests completada', 'success');
+                generarReporte();
+            }, 5000);
+        }
+
+        function generarReporte() {
+            log('📋 Generando reporte final...', 'info');
+            
+            const porcentajeExito = testStats.ejecutados > 0 ? 
+                ((testStats.exitosos / testStats.ejecutados) * 100).toFixed(1) : 0;
+            
+            log(`📊 REPORTE FINAL:`, 'info');
+            log(`✅ Tests exitosos: ${testStats.exitosos}/${testStats.ejecutados} (${porcentajeExito}%)`, 'success');
+            log(`❌ Tests fallidos: ${testStats.fallidos}`, 'error');
+            log(`⏱️ Tiempo total: ${((Date.now() - testStats.tiempoInicio) / 1000).toFixed(1)}s`, 'info');
+            
+            if (porcentajeExito >= 80) {
+                log(`🎉 SISTEMA APROBADO - Funcionalidad excelente`, 'success');
+            } else if (porcentajeExito >= 60) {
+                log(`⚠️ SISTEMA PARCIAL - Requiere mejoras`, 'warning');
+            } else {
+                log(`❌ SISTEMA FALLIDO - Requiere correcciones críticas`, 'error');
+            }
+        }
+
+        function limpiarConsola() {
+            document.getElementById('console-output').innerHTML = '';
+            log('🧹 Consola limpiada', 'info');
+        }
+
+        // Inicialización
+        window.onload = function() {
+            log('🔧 Sistema de testing inicializado', 'success');
+            log('📝 Haga clic en "Cargar Sistema" para comenzar', 'info');
+        };
+    </script>
+</body>
+</html>

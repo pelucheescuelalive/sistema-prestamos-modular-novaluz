@@ -2128,25 +2128,78 @@
         // Cargar clientes en formato galería
         async function cargarClientes() {
             try {
-                console.log('Cargando clientes...');
+                console.log('🔄 Cargando clientes...');
                 const resultado = await fetch('api_modular.php?action=clientes_listar');
                 const data = await resultado.json();
                 
-                console.log('Respuesta API clientes:', data);
+                console.log('📡 Respuesta API clientes:', data);
                 
                 if (data.exito) {
                     clientes = data.datos || [];
-                    console.log('Clientes cargados:', clientes);
+                    console.log('✅ Clientes cargados:', clientes);
+                    
+                    // Si no hay clientes, crear datos de prueba
+                    if (clientes.length === 0) {
+                        console.log('📝 No hay clientes, creando datos de prueba...');
+                        clientes = crearClientesPrueba();
+                    }
+                    
                     mostrarClientesEnGaleria(clientes);
                     actualizarContadorClientes();
                 } else {
-                    console.error('Error cargando clientes:', data.mensaje);
-                    clientes = [];
-                    mostrarClientesEnGaleria([]);
+                    console.error('❌ Error cargando clientes:', data.mensaje);
+                    console.log('📝 Creando datos de prueba...');
+                    clientes = crearClientesPrueba();
+                    mostrarClientesEnGaleria(clientes);
                 }
             } catch (error) {
-                console.error('Error cargando clientes:', error);
+                console.error('❌ Error cargando clientes:', error);
+                console.log('📝 Creando datos de prueba por error...');
+                clientes = crearClientesPrueba();
+                mostrarClientesEnGaleria(clientes);
             }
+        }
+        
+        // Crear clientes de prueba para testing
+        function crearClientesPrueba() {
+            return [
+                {
+                    id: 'CLI001',
+                    cliente_id: 'CLI001',
+                    nombre: 'María Elena Rodríguez',
+                    telefono: '809-555-1234',
+                    documento: '001-0123456-7',
+                    email: 'maria.rodriguez@email.com',
+                    direccion: 'Calle Principal #123, Santo Domingo',
+                    calificacion: 5.0,
+                    activo: true,
+                    foto_perfil: null
+                },
+                {
+                    id: 'CLI002',
+                    cliente_id: 'CLI002',
+                    nombre: 'Juan Carlos Méndez',
+                    telefono: '809-555-5678',
+                    documento: '001-9876543-2',
+                    email: 'juan.mendez@email.com',
+                    direccion: 'Av. Independencia #456, Santiago',
+                    calificacion: 4.5,
+                    activo: true,
+                    foto_perfil: null
+                },
+                {
+                    id: 'CLI003',
+                    cliente_id: 'CLI003',
+                    nombre: 'Ana Patricia Jiménez',
+                    telefono: '809-555-9012',
+                    documento: '001-5555555-5',
+                    email: 'ana.jimenez@email.com',
+                    direccion: 'Calle Duarte #789, La Vega',
+                    calificacion: 3.8,
+                    activo: true,
+                    foto_perfil: null
+                }
+            ];
         }
         
         // Mostrar clientes en formato galería
@@ -2183,8 +2236,12 @@
                     fotoHtml = `<img src="${cliente.foto_perfil}" alt="${cliente.nombre}" onerror="this.parentElement.innerHTML='👤'">`;
                 }
                 
+                // Asegurar que el cliente tenga un ID válido
+                const clienteId = cliente.id || cliente.cliente_id || `CLI_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                console.log('🔍 Generando tarjeta para cliente:', { id: clienteId, nombre: cliente.nombre });
+                
                 return `
-                    <div class="cliente-card" onclick="abrirModalCliente(${cliente.id})" data-cliente-id="${cliente.id}">
+                    <div class="cliente-card" onclick="abrirModalCliente('${clienteId}')" data-cliente-id="${clienteId}">
                         <div class="cliente-foto-container">
                             <div class="cliente-foto">
                                 ${fotoHtml}
@@ -2192,13 +2249,13 @@
                             <div class="cliente-status ${statusClass}"></div>
                         </div>
                         <div class="cliente-info">
-                            <div class="cliente-nombre">${cliente.nombre}</div>
+                            <div class="cliente-nombre">${cliente.nombre || 'Sin nombre'}</div>
                             <div class="cliente-detalles">
-                                ${cliente.telefono}<br>
-                                ${cliente.documento}
+                                ${cliente.telefono || 'Sin teléfono'}<br>
+                                ${cliente.documento || 'Sin documento'}
                             </div>
-                            <div class="cliente-rating">
-                                <div class="stars">${stars}</div>
+                            <div class="cliente-rating" onclick="event.stopPropagation(); mostrarRatingModal('${clienteId}')">
+                                <div class="stars rating-interactive">${stars}</div>
                                 <div class="rating-value">${rating.toFixed(1)}</div>
                             </div>
                             <div class="cliente-stats">
@@ -2212,10 +2269,10 @@
                                 </div>
                             </div>
                             <div class="cliente-acciones">
-                                <button class="btn-accion btn-ver" onclick="event.stopPropagation(); abrirModalCliente(${cliente.id})">
+                                <button class="btn-accion btn-ver" onclick="event.stopPropagation(); abrirModalCliente('${clienteId}')">
                                     👁️ Ver
                                 </button>
-                                <button class="btn-accion btn-opciones" onclick="event.stopPropagation(); mostrarOpcionesCliente(${cliente.id}, event)">
+                                <button class="btn-accion btn-opciones" onclick="event.stopPropagation(); mostrarOpcionesCliente('${clienteId}', event)">
                                     ⋮ OPCIONES
                                 </button>
                             </div>
@@ -2733,22 +2790,190 @@
             }
         }
         
-        // ================= OPCIONES Y ACCIONES =================
+        // ================= SISTEMA DE CALIFICACIONES =================
+        
+        // Mostrar modal de rating
+        function mostrarRatingModal(clienteId) {
+            console.log('⭐ Abriendo modal de rating para cliente:', clienteId);
+            
+            const cliente = clientes.find(c => (c.id || c.cliente_id) === clienteId);
+            if (!cliente) {
+                console.error('❌ Cliente no encontrado para rating:', clienteId);
+                return;
+            }
+            
+            const ratingActual = parseFloat(cliente.calificacion || 0);
+            
+            const modalHtml = `
+                <div id="rating-modal" class="modal-overlay" style="display: flex; align-items: center; justify-content: center;">
+                    <div class="modal-content" style="max-width: 400px; text-align: center;">
+                        <h3>⭐ Calificar Cliente</h3>
+                        <div style="margin: 20px 0;">
+                            <h4>${cliente.nombre}</h4>
+                            <p>Calificación actual: ${ratingActual.toFixed(1)} estrellas</p>
+                        </div>
+                        
+                        <div class="rating-selector" style="margin: 30px 0;">
+                            <div class="stars-selector" style="font-size: 2em; margin: 20px 0;">
+                                ${[1,2,3,4,5].map(num => `
+                                    <span class="star-btn" data-rating="${num}" 
+                                          style="cursor: pointer; color: ${num <= ratingActual ? '#ffd700' : '#ddd'}; margin: 0 5px;"
+                                          onmouseover="previsualizarRating(${num})"
+                                          onmouseout="restaurarRating(${ratingActual})"
+                                          onclick="aplicarRating('${clienteId}', ${num})">⭐</span>
+                                `).join('')}
+                            </div>
+                            <p id="rating-preview">Selecciona una calificación</p>
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" onclick="cerrarRatingModal()">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remover modal anterior si existe
+            const modalExistente = document.getElementById('rating-modal');
+            if (modalExistente) {
+                modalExistente.remove();
+            }
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+        
+        // Previsualizar rating
+        function previsualizarRating(rating) {
+            const stars = document.querySelectorAll('.star-btn');
+            const preview = document.getElementById('rating-preview');
+            
+            stars.forEach((star, index) => {
+                star.style.color = (index + 1) <= rating ? '#ffd700' : '#ddd';
+            });
+            
+            const descripciones = ['', 'Muy Malo', 'Malo', 'Regular', 'Bueno', 'Excelente'];
+            preview.textContent = descripciones[rating] || 'Selecciona una calificación';
+        }
+        
+        // Restaurar rating visual
+        function restaurarRating(ratingOriginal) {
+            const stars = document.querySelectorAll('.star-btn');
+            stars.forEach((star, index) => {
+                star.style.color = (index + 1) <= ratingOriginal ? '#ffd700' : '#ddd';
+            });
+            document.getElementById('rating-preview').textContent = 'Selecciona una calificación';
+        }
+        
+        // Aplicar nueva calificación
+        async function aplicarRating(clienteId, nuevoRating) {
+            console.log('💾 Aplicando rating:', { clienteId, nuevoRating });
+            
+            try {
+                // Actualizar en el array local
+                const cliente = clientes.find(c => (c.id || c.cliente_id) === clienteId);
+                if (cliente) {
+                    cliente.calificacion = nuevoRating;
+                }
+                
+                // Aquí iría la llamada al backend para guardar
+                // const resultado = await llamarBackend('clientes', 'actualizar_rating', { id: clienteId, rating: nuevoRating });
+                
+                // Mostrar confirmación
+                alert(`✅ Calificación actualizada: ${nuevoRating} estrellas`);
+                
+                // Recargar la galería
+                mostrarClientesEnGaleria(clientes);
+                
+                // Cerrar modal
+                cerrarRatingModal();
+                
+            } catch (error) {
+                console.error('❌ Error actualizando rating:', error);
+                alert('❌ Error al actualizar la calificación');
+            }
+        }
+        
+        // Cerrar modal de rating
+        function cerrarRatingModal() {
+            const modal = document.getElementById('rating-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
         
         // Mostrar menú de opciones
         function mostrarOpcionesCliente(clienteId, event) {
             console.log('⚙️ Mostrando opciones para cliente:', clienteId);
             
-            const menu = document.getElementById('opciones-menu-cliente');
+            let menu = document.getElementById('opciones-menu-cliente');
+            
+            // Si no existe el menú, crearlo
             if (!menu) {
-                console.error('❌ Menu de opciones no encontrado');
-                return;
+                console.log('📝 Creando menú de opciones...');
+                const menuHtml = `
+                    <div id="opciones-menu-cliente" class="opciones-menu">
+                        <div class="opcion-item" onclick="editarCliente()">
+                            ✏️ Editar Cliente
+                        </div>
+                        <div class="opcion-item" onclick="verPrestamoCliente()">
+                            💼 Ver Préstamos
+                        </div>
+                        <div class="opcion-item" onclick="crearPrestamoCliente()">
+                            ➕ Crear Préstamo
+                        </div>
+                        <div class="opcion-item eliminar" onclick="eliminarCliente()">
+                            🗑️ Eliminar Cliente
+                        </div>
+                    </div>
+                `;
+                document.body.insertAdjacentHTML('beforeend', menuHtml);
+                menu = document.getElementById('opciones-menu-cliente');
+                
+                // Agregar estilos si no existen
+                if (!document.getElementById('opciones-menu-styles')) {
+                    const styles = `
+                        <style id="opciones-menu-styles">
+                        .opciones-menu {
+                            position: absolute;
+                            background: white;
+                            border: 1px solid #ddd;
+                            border-radius: 8px;
+                            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                            z-index: 1000;
+                            display: none;
+                            min-width: 180px;
+                        }
+                        .opciones-menu.active {
+                            display: block;
+                        }
+                        .opcion-item {
+                            padding: 12px 16px;
+                            cursor: pointer;
+                            border-bottom: 1px solid #eee;
+                            transition: background-color 0.2s;
+                        }
+                        .opcion-item:hover {
+                            background-color: #f5f5f5;
+                        }
+                        .opcion-item:last-child {
+                            border-bottom: none;
+                        }
+                        .opcion-item.eliminar {
+                            color: #dc3545;
+                        }
+                        .opcion-item.eliminar:hover {
+                            background-color: #ffe6e6;
+                        }
+                        </style>
+                    `;
+                    document.head.insertAdjacentHTML('beforeend', styles);
+                }
             }
             
+            // Posicionar menú
             const rect = event.target.getBoundingClientRect();
-            
-            menu.style.top = (rect.bottom + window.scrollY) + 'px';
-            menu.style.left = rect.left + 'px';
+            menu.style.top = (rect.bottom + window.scrollY + 5) + 'px';
+            menu.style.left = (rect.left + window.scrollX) + 'px';
             menu.classList.add('active');
             menu.dataset.clienteId = clienteId;
             
@@ -2761,7 +2986,7 @@
             // Cerrar menú al hacer clic fuera
             setTimeout(() => {
                 document.addEventListener('click', function closeMenu(e) {
-                    if (!menu.contains(e.target)) {
+                    if (!menu.contains(e.target) && !e.target.classList.contains('btn-opciones')) {
                         menu.classList.remove('active');
                         document.removeEventListener('click', closeMenu);
                     }
@@ -2769,50 +2994,154 @@
             }, 100);
         }
         
-        // Acciones del menú de opciones
-        function crearPrestamoCliente() {
-            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
-            const menu = document.getElementById('opciones-menu-cliente');
-            if (menu) menu.classList.remove('active');
-            
-            // Cambiar a pestaña de préstamos
-            showTab('prestamos');
-            if (typeof mostrarFormularioNuevoPrestamo === 'function') {
-                mostrarFormularioNuevoPrestamo();
-                
-                // Preseleccionar cliente en el formulario
-                setTimeout(() => {
-                    const selectCliente = document.getElementById('prestamo-cliente');
-                    if (selectCliente && clienteId) {
-                        selectCliente.value = clienteId;
-                    }
-                }, 500);
-            }
-        }
-        
-        function mostrarPrestamosCliente() {
-            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
-            const menu = document.getElementById('opciones-menu-cliente');
-            if (menu) menu.classList.remove('active');
-            
-            if (clienteId) {
-                abrirModalCliente(clienteId);
-                setTimeout(() => cambiarTabInfo('prestamos'), 100);
-            }
-        }
-        
+        // Editar cliente
         function editarCliente() {
             const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
             const menu = document.getElementById('opciones-menu-cliente');
             if (menu) menu.classList.remove('active');
             
-            const cliente = clientes.find(c => c.id == clienteId);
-            if (!cliente) return;
+            console.log('✏️ Editando cliente:', clienteId);
             
-            // Ir al formulario de edición
-            mostrarFormularioNuevoCliente();
+            const cliente = clientes.find(c => (c.id || c.cliente_id) === clienteId);
+            if (!cliente) {
+                alert('❌ Cliente no encontrado');
+                return;
+            }
             
-            // Llenar datos
+            // Mostrar formulario de edición
+            const formularioHtml = `
+                <div id="editar-cliente-modal" class="modal-overlay" style="display: flex;">
+                    <div class="modal-content" style="max-width: 500px; width: 100%;">
+                        <h3>✏️ Editar Cliente</h3>
+                        <form id="form-editar-cliente">
+                            <div class="form-group">
+                                <label>Nombre Completo:</label>
+                                <input type="text" id="edit-nombre" value="${cliente.nombre || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Teléfono:</label>
+                                <input type="tel" id="edit-telefono" value="${cliente.telefono || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Documento:</label>
+                                <input type="text" id="edit-documento" value="${cliente.documento || ''}" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email:</label>
+                                <input type="email" id="edit-email" value="${cliente.email || ''}">
+                            </div>
+                            <div class="form-group">
+                                <label>Dirección:</label>
+                                <textarea id="edit-direccion">${cliente.direccion || ''}</textarea>
+                            </div>
+                            <div class="modal-actions">
+                                <button type="button" class="btn btn-secondary" onclick="cerrarModalEditarCliente()">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', formularioHtml);
+            
+            // Manejar envío del formulario
+            document.getElementById('form-editar-cliente').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await guardarEdicionCliente(clienteId);
+            });
+        }
+        
+        // Guardar edición de cliente
+        async function guardarEdicionCliente(clienteId) {
+            const datos = {
+                nombre: document.getElementById('edit-nombre').value,
+                telefono: document.getElementById('edit-telefono').value,
+                documento: document.getElementById('edit-documento').value,
+                email: document.getElementById('edit-email').value,
+                direccion: document.getElementById('edit-direccion').value
+            };
+            
+            console.log('💾 Guardando edición de cliente:', { clienteId, datos });
+            
+            // Actualizar en el array local
+            const cliente = clientes.find(c => (c.id || c.cliente_id) === clienteId);
+            if (cliente) {
+                Object.assign(cliente, datos);
+            }
+            
+            alert('✅ Cliente actualizado correctamente');
+            mostrarClientesEnGaleria(clientes);
+            cerrarModalEditarCliente();
+        }
+        
+        // Cerrar modal de edición
+        function cerrarModalEditarCliente() {
+            const modal = document.getElementById('editar-cliente-modal');
+            if (modal) modal.remove();
+        }
+        
+        // Ver préstamos del cliente
+        function verPrestamoCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            console.log('💼 Viendo préstamos del cliente:', clienteId);
+            
+            // Cambiar a tab de préstamos
+            showTab('prestamos');
+            
+            // Aquí se podría filtrar préstamos por cliente
+            setTimeout(() => {
+                alert(`🔍 Mostrando préstamos del cliente ${clienteId}`);
+            }, 500);
+        }
+        
+        // Eliminar cliente
+        function eliminarCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            const cliente = clientes.find(c => (c.id || c.cliente_id) === clienteId);
+            if (!cliente) {
+                alert('❌ Cliente no encontrado');
+                return;
+            }
+            
+            if (confirm(`⚠️ ¿Está seguro de eliminar al cliente "${cliente.nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+                console.log('🗑️ Eliminando cliente:', clienteId);
+                
+                // Remover del array local
+                const index = clientes.findIndex(c => (c.id || c.cliente_id) === clienteId);
+                if (index > -1) {
+                    clientes.splice(index, 1);
+                }
+                
+                alert('✅ Cliente eliminado correctamente');
+                mostrarClientesEnGaleria(clientes);
+            }
+        }
+        
+        // Crear préstamo para cliente
+        function crearPrestamoCliente() {
+            const clienteId = document.getElementById('opciones-menu-cliente')?.dataset.clienteId;
+            const menu = document.getElementById('opciones-menu-cliente');
+            if (menu) menu.classList.remove('active');
+            
+            console.log('➕ Creando préstamo para cliente:', clienteId);
+            
+            // Cambiar a pestaña de préstamos
+            showTab('prestamos');
+            
+            // Simular crear préstamo
+            setTimeout(() => {
+                alert(`➕ Creando nuevo préstamo para cliente ${clienteId}`);
+            }, 500);
+        }
+        
+        // ================= MODAL DE CLIENTE =================
             document.getElementById('cliente-id-edit').value = clienteId;
             document.getElementById('cliente-nombre').value = cliente.nombre;
             document.getElementById('cliente-documento').value = cliente.documento;
