@@ -1602,7 +1602,7 @@
                         
                         // Determinar el tipo de préstamo
                         let tipoPrestamo = 'A Cuota';
-                        if (prestamo.tipo_prestamo === 'solo_interes' || prestamo.es_solo_interes === '1') {
+                        if (prestamo.tipo === 'interes' || prestamo.tipo_prestamo === 'solo_interes' || prestamo.es_solo_interes === '1') {
                             tipoPrestamo = 'Solo Interés';
                         }
                         
