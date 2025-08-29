@@ -1,5 +1,0 @@
-# Configuración GitHub
-Usuario: pelucheescuelalive
-Repositorio: sistema-prestamos-modular-novaluz
-URL: https://github.com/pelucheescuelalive/sistema-prestamos-modular-novaluz.git
-Configurado: 28/08/2025 15:45:00

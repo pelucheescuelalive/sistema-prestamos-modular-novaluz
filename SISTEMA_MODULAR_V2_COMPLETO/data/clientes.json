@@ -1,0 +1,34 @@
+[
+    {
+        "nombre": "peluche",
+        "documento": "67897689698E",
+        "telefono": "565464",
+        "direccion": "",
+        "id": 5,
+        "fecha_creacion": "2025-08-28 16:13:06"
+    },
+    {
+        "nombre": "María García",
+        "documento": "12345678",
+        "telefono": "555-1234",
+        "direccion": "Calle 123",
+        "id": 6,
+        "fecha_creacion": "2025-08-29 18:10:00"
+    },
+    {
+        "nombre": "Juan Pérez",
+        "documento": "87654321",
+        "telefono": "555-5678",
+        "direccion": "Avenida 456",
+        "id": 7,
+        "fecha_creacion": "2025-08-29 18:11:00"
+    },
+    {
+        "nombre": "Ana López",
+        "documento": "11223344",
+        "telefono": "555-9999",
+        "direccion": "Carrera 789",
+        "id": 8,
+        "fecha_creacion": "2025-08-29 18:12:00"
+    }
+]

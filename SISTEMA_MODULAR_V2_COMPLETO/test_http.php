@@ -3,7 +3,7 @@
  * Test HTTP directo para simular la llamada del frontend
  */
 
-$url = 'http://localhost:8082/api_simple.php?action=prestamo_crear';
+$url = 'http://localhost:8882/api_simple.php?action=prestamo_crear';
 $data = [
     'cliente_id' => 5,
     'monto' => 10000,
