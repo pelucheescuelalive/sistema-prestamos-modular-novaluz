@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 Test Básico - Nova Luz Pro</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div id="test-container" style="
+        padding: 40px;
+        background: white;
+        margin: 20px;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        max-width: 1000px;
+        margin: 20px auto;
+    ">
+        <h1 style="color: #2563eb; text-align: center; margin-bottom: 30px;">
+            🧪 Test Sistema Nova Luz Pro
+        </h1>
+        
+        <div id="test-results" style="
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        "></div>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <button id="launch-app" style="
+                background: #2563eb;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                margin: 0 10px;
+            ">🚀 Lanzar Sistema</button>
+            
+            <button id="run-tests" style="
+                background: #10b981;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                margin: 0 10px;
+            ">🔬 Ejecutar Tests</button>
+        </div>
+    </div>
+
+    <!-- App Container (Hidden) -->
+    <div id="app" class="app-container" style="display: none;">
+        <header id="app-header" class="app-header"></header>
+        <nav id="app-navigation" class="app-navigation"></nav>
+        <main id="main-content" class="app-content"></main>
+        <div id="modal-container" class="modal-container"></div>
+        <div id="notification-container" class="notification-container"></div>
+    </div>
+
+    <script type="module">
+        const testResults = document.getElementById('test-results');
+        
+        function log(message, type = 'info') {
+            const colors = {
+                success: '#10b981',
+                error: '#ef4444',
+                warning: '#f59e0b',
+                info: '#2563eb'
+            };
+            
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: '📝'
+            };
+            
+            const timestamp = new Date().toLocaleTimeString();
+            testResults.innerHTML += `
+                <div style="color: ${colors[type]}; margin: 5px 0;">
+                    ${icons[type]} [${timestamp}] ${message}
+                </div>
+            `;
+            testResults.scrollTop = testResults.scrollHeight;
+        }
+        
+        async function runTests() {
+            log('🔍 Iniciando tests del sistema...', 'info');
+            
+            // Test 1: Verificar archivos CSS
+            try {
+                const cssResponse = await fetch('./css/styles.css');
+                if (cssResponse.ok) {
+                    log('CSS Principal cargado correctamente', 'success');
+                } else {
+                    log('Error cargando CSS principal', 'error');
+                }
+            } catch (error) {
+                log(`Error accediendo a CSS: ${error.message}`, 'error');
+            }
+            
+            // Test 2: Verificar componentes
+            const components = [
+                './js/components/Header.js',
+                './js/components/Navigation.js',
+                './js/components/Modal.js',
+                './js/components/Toast.js'
+            ];
+            
+            for (const component of components) {
+                try {
+                    const module = await import(component);
+                    log(`Componente ${component} cargado`, 'success');
+                } catch (error) {
+                    log(`Error en ${component}: ${error.message}`, 'error');
+                }
+            }
+            
+            // Test 3: Verificar páginas
+            const pages = [
+                './js/pages/dashboard.js',
+                './js/pages/clientes.js',
+                './js/pages/prestamos.js'
+            ];
+            
+            for (const page of pages) {
+                try {
+                    const module = await import(page);
+                    log(`Página ${page} cargada`, 'success');
+                } catch (error) {
+                    log(`Error en ${page}: ${error.message}`, 'error');
+                }
+            }
+            
+            // Test 4: Verificar app principal
+            try {
+                const appModule = await import('./js/app.js');
+                log('Módulo principal app.js cargado', 'success');
+            } catch (error) {
+                log(`Error en app.js: ${error.message}`, 'error');
+            }
+            
+            log('🎉 Tests completados', 'info');
+        }
+        
+        async function launchApp() {
+            log('🚀 Lanzando aplicación...', 'info');
+            
+            try {
+                // Mostrar contenedor de la app
+                document.getElementById('test-container').style.display = 'none';
+                document.getElementById('app').style.display = 'block';
+                
+                // Importar y ejecutar la app
+                const { SistemaNovaLuz } = await import('./js/app.js');
+                window.app = new SistemaNovaLuz();
+                
+                log('✅ Aplicación lanzada correctamente', 'success');
+                
+            } catch (error) {
+                log(`❌ Error lanzando app: ${error.message}`, 'error');
+                // Mostrar el contenedor de test de nuevo
+                document.getElementById('test-container').style.display = 'block';
+                document.getElementById('app').style.display = 'none';
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('run-tests').addEventListener('click', runTests);
+        document.getElementById('launch-app').addEventListener('click', launchApp);
+        
+        // Auto-ejecutar tests al cargar
+        document.addEventListener('DOMContentLoaded', () => {
+            log('🌟 Test environment ready', 'info');
+            runTests();
+        });
+    </script>
+</body>
+</html>

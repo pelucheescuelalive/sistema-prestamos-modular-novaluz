@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Sistema Debug - Nova Luz Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+        
+        .debug-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .debug-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .debug-header h1 {
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+        
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        
+        .test-title {
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 10px;
+        }
+        
+        .test-result {
+            font-family: monospace;
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        .warning { color: #f59e0b; }
+        
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            background: #1d4ed8;
+        }
+        
+        #console-output {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <div class="debug-header">
+            <h1>🔍 Sistema Nova Luz - Diagnóstico</h1>
+            <p>Verificación completa del sistema y sus componentes</p>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">📁 Estado de Archivos</div>
+            <div id="file-status" class="test-result">Verificando...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🔧 Módulos JavaScript</div>
+            <div id="module-status" class="test-result">Verificando...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🎨 Archivos CSS</div>
+            <div id="css-status" class="test-result">Verificando...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">⚙️ Funcionalidad</div>
+            <div id="functionality-status" class="test-result">Verificando...</div>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">🚀 Acciones</div>
+            <button class="btn" onclick="testMainApp()">Probar App Principal</button>
+            <button class="btn" onclick="openMainApp()">Abrir Sistema</button>
+            <button class="btn" onclick="clearConsole()">Limpiar Console</button>
+        </div>
+        
+        <div class="test-section">
+            <div class="test-title">📊 Console Log</div>
+            <div id="console-output"></div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔍 Iniciando diagnóstico del sistema...');
+        
+        // Capturar console.log
+        const originalLog = console.log;
+        const originalError = console.error;
+        const originalWarn = console.warn;
+        
+        const consoleOutput = document.getElementById('console-output');
+        
+        function addToConsole(message, type = 'log') {
+            const timestamp = new Date().toLocaleTimeString();
+            const prefix = {
+                'log': '📝',
+                'error': '❌',
+                'warn': '⚠️'
+            }[type] || '📝';
+            
+            consoleOutput.textContent += `${timestamp} ${prefix} ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+        
+        console.log = function(...args) {
+            originalLog.apply(console, args);
+            addToConsole(args.join(' '), 'log');
+        };
+        
+        console.error = function(...args) {
+            originalError.apply(console, args);
+            addToConsole(args.join(' '), 'error');
+        };
+        
+        console.warn = function(...args) {
+            originalWarn.apply(console, args);
+            addToConsole(args.join(' '), 'warn');
+        };
+        
+        // Funciones de diagnóstico
+        async function checkFiles() {
+            const files = [
+                'index.html',
+                'css/styles.css',
+                'css/components.css',
+                'js/app.js',
+                'js/components/Header.js',
+                'js/components/Navigation.js',
+                'js/components/Modal.js',
+                'js/components/Toast.js',
+                'js/pages/dashboard.js'
+            ];
+            
+            let results = [];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        results.push(`✅ ${file} - OK`);
+                    } else {
+                        results.push(`❌ ${file} - Error ${response.status}`);
+                    }
+                } catch (error) {
+                    results.push(`❌ ${file} - No encontrado`);
+                }
+            }
+            
+            document.getElementById('file-status').innerHTML = results.join('<br>');
+        }
+        
+        async function checkModules() {
+            const modules = [
+                './js/components/Header.js',
+                './js/components/Navigation.js',
+                './js/components/Modal.js',
+                './js/components/Toast.js',
+                './js/pages/dashboard.js'
+            ];
+            
+            let results = [];
+            
+            for (const module of modules) {
+                try {
+                    const imported = await import(module);
+                    results.push(`✅ ${module} - Cargado`);
+                    console.log(`Módulo cargado: ${module}`, imported);
+                } catch (error) {
+                    results.push(`❌ ${module} - Error: ${error.message}`);
+                    console.error(`Error cargando ${module}:`, error);
+                }
+            }
+            
+            document.getElementById('module-status').innerHTML = results.join('<br>');
+        }
+        
+        function checkCSS() {
+            const stylesheets = document.styleSheets;
+            let results = [`📊 Total hojas de estilo: ${stylesheets.length}`];
+            
+            for (let i = 0; i < stylesheets.length; i++) {
+                const sheet = stylesheets[i];
+                const href = sheet.href || 'Inline';
+                try {
+                    const rules = sheet.cssRules || sheet.rules;
+                    results.push(`✅ ${href} - ${rules.length} reglas`);
+                } catch (error) {
+                    results.push(`⚠️ ${href} - No accesible (CORS)`);
+                }
+            }
+            
+            document.getElementById('css-status').innerHTML = results.join('<br>');
+        }
+        
+        function checkFunctionality() {
+            let results = [];
+            
+            // Verificar elementos del DOM
+            const elements = ['app-header', 'app-navigation', 'main-content'];
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    results.push(`✅ Elemento #${id} existe`);
+                } else {
+                    results.push(`❌ Elemento #${id} no encontrado`);
+                }
+            });
+            
+            // Verificar LocalStorage
+            try {
+                localStorage.setItem('test', 'ok');
+                localStorage.removeItem('test');
+                results.push(`✅ LocalStorage funcional`);
+            } catch (error) {
+                results.push(`❌ LocalStorage error: ${error.message}`);
+            }
+            
+            // Verificar fetch API
+            if (typeof fetch !== 'undefined') {
+                results.push(`✅ Fetch API disponible`);
+            } else {
+                results.push(`❌ Fetch API no disponible`);
+            }
+            
+            document.getElementById('functionality-status').innerHTML = results.join('<br>');
+        }
+        
+        function testMainApp() {
+            console.log('🧪 Probando aplicación principal...');
+            try {
+                // Intentar cargar el módulo principal
+                import('./js/app.js')
+                    .then(module => {
+                        console.log('✅ App.js cargado correctamente', module);
+                        alert('✅ El sistema principal se puede cargar correctamente');
+                    })
+                    .catch(error => {
+                        console.error('❌ Error cargando app.js:', error);
+                        alert('❌ Error: ' + error.message);
+                    });
+            } catch (error) {
+                console.error('❌ Error general:', error);
+                alert('❌ Error general: ' + error.message);
+            }
+        }
+        
+        function openMainApp() {
+            window.open('./index.html', '_blank');
+        }
+        
+        function clearConsole() {
+            consoleOutput.textContent = '';
+            console.log('🧹 Console limpiado');
+        }
+        
+        // Ejecutar diagnósticos automáticamente
+        document.addEventListener('DOMContentLoaded', async () => {
+            console.log('🔍 Iniciando diagnósticos automáticos...');
+            
+            await checkFiles();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            await checkModules();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            checkCSS();
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            checkFunctionality();
+            
+            console.log('✅ Diagnósticos completados');
+        });
+    </script>
+</body>
+</html>
