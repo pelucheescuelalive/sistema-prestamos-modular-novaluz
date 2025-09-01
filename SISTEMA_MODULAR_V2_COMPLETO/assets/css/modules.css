@@ -1,0 +1,268 @@
+/* ESTILOS PARA MÓDULOS - Sistema de Préstamos Modular Nova Luz Pro */
+
+/* Módulo de Clientes */
+.clientes-module {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.cliente-card {
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: var(--transition);
+}
+
+.cliente-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 10px rgba(33, 150, 243, 0.1);
+}
+
+.cliente-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+}
+
+/* Módulo de Préstamos */
+.prestamos-module {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.prestamo-card {
+    border: 1px solid #e9ecef;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    position: relative;
+}
+
+.prestamo-status {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.prestamo-status.activo {
+    background: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+}
+
+.prestamo-status.completado {
+    background: rgba(0, 188, 212, 0.1);
+    color: var(--info-color);
+}
+
+.prestamo-status.cancelado {
+    background: rgba(244, 67, 54, 0.1);
+    color: var(--danger-color);
+}
+
+/* Módulo de Pagos */
+.pagos-module {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.pago-item {
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.pago-item:last-child {
+    border-bottom: none;
+}
+
+.pago-monto {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--success-color);
+}
+
+.pago-fecha {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Módulo de Mora */
+.mora-module {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.mora-alert {
+    background: rgba(244, 67, 54, 0.1);
+    border: 1px solid rgba(244, 67, 54, 0.2);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mora-amount {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--danger-color);
+}
+
+.mora-days {
+    color: #666;
+    font-size: 0.875rem;
+}
+
+/* Módulo de Reportes */
+.reportes-module {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+}
+
+.chart-container {
+    position: relative;
+    height: 300px;
+    margin: 1rem 0;
+}
+
+.report-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.summary-item {
+    text-align: center;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: var(--border-radius);
+}
+
+.summary-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.summary-label {
+    color: #666;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+}
+
+/* Navegación de módulos */
+.module-nav {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--box-shadow);
+}
+
+.module-nav .nav-link {
+    color: #666;
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius);
+    transition: var(--transition);
+    margin-right: 0.5rem;
+}
+
+.module-nav .nav-link:hover {
+    background: rgba(33, 150, 243, 0.1);
+    color: var(--primary-color);
+}
+
+.module-nav .nav-link.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+/* Filtros y búsqueda */
+.filters-section {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--box-shadow);
+}
+
+.search-box {
+    position: relative;
+}
+
+.search-box .form-control {
+    padding-left: 2.5rem;
+}
+
+.search-box .search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #666;
+}
+
+/* Acciones rápidas */
+.quick-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.quick-action-btn {
+    flex: 1;
+    padding: 0.75rem;
+    border: 1px dashed #ddd;
+    border-radius: var(--border-radius);
+    background: white;
+    color: #666;
+    text-decoration: none;
+    text-align: center;
+    transition: var(--transition);
+}
+
+.quick-action-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background: rgba(33, 150, 243, 0.05);
+}
+
+/* Responsivo para módulos */
+@media (max-width: 768px) {
+    .module-nav .nav-link {
+        margin-bottom: 0.5rem;
+        margin-right: 0;
+    }
+    
+    .quick-actions {
+        flex-direction: column;
+    }
+    
+    .report-summary {
+        grid-template-columns: 1fr;
+    }
+    
+    .prestamo-status {
+        position: static;
+        margin-top: 0.5rem;
+        display: inline-block;
+    }
+}

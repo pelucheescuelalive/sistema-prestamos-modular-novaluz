@@ -1,0 +1,29 @@
+# Configuración para archivos estáticos
+# Asegurar que los archivos JS, CSS e imágenes se sirvan correctamente
+
+# Para archivos JavaScript
+<FilesMatch "\.(js)$">
+    Header set Content-Type "application/javascript; charset=utf-8"
+</FilesMatch>
+
+# Para archivos CSS
+<FilesMatch "\.(css)$">
+    Header set Content-Type "text/css; charset=utf-8"
+</FilesMatch>
+
+# Para archivos de imagen
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg)$">
+    Header set Content-Type "image/*"
+</FilesMatch>
+
+# Evitar que archivos estáticos sean procesados como PHP
+RewriteEngine On
+
+# Servir archivos estáticos directamente
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule ^.*$ - [L]
+
+# Solo procesar archivos PHP si no existe el archivo solicitado
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ index.php [L]
